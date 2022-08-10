@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9207422399840609413}
   - component: {fileID: 1763038531876710308}
+  - component: {fileID: -705983704380558047}
   - component: {fileID: -1196071275580505602}
-  m_Layer: 0
-  m_Name: Wall
+  m_Layer: 8
+  m_Name: Gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.11764707, g: 0.11764707, b: 0.11764707, a: 1}
+  m_Color: {r: 0.053266283, g: 0.5377358, b: 0.0639064, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -84,6 +85,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-705983704380558047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391884857599476192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4be3f74cbce36e428127b5d08749ff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type0: 0
+  type1: 0
+  type2: 0
+  type3: 0
 --- !u!61 &-1196071275580505602
 BoxCollider2D:
   m_ObjectHideFlags: 0

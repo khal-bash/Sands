@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DTO.Storage;
 
 /// <summary>
 /// Governs the behavior of the player's crosshairs.
@@ -18,23 +19,8 @@ public class Crosshairs : MonoBehaviour
 
     #endregion
 
-    /// Properties set in code
-    #region Code Properties
-
-    /// <summary>
-    /// Gets the transform of the Player (parent object).
-    /// </summary>
-    private Transform Player_Transform { get; set; }
-
-    #endregion
-
     /// Built-in Unity Functions
     #region Unity Functions
-
-    void Start()
-    {
-        Player_Transform = gameObject.transform.parent;
-    }
 
     void Update()
     {
@@ -52,7 +38,7 @@ public class Crosshairs : MonoBehaviour
     void FollowMouse()
     {
         
-        Vector2 player_position = Player_Transform.position;
+        Vector2 player_position = StoredComponents.Player_Transform.position;
 
         Vector2 cursor_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 player_to_cursor = cursor_position - player_position;

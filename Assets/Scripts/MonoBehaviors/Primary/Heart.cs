@@ -1,19 +1,65 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DTO.Storage;
 
+/// <summary>
+/// Governs the behavior of a Heart in the On-Screen health display.
+/// </summary>
 public class Heart : MonoBehaviour
 {
 
+    // Properties set in the Inspector.
+    #region Inspector Properties
+
+    /// <summary>
+    /// The ID of the Heart. Used to determine whether the heart should be visible.
+    /// </summary>
     public int ID;
-    public SpriteRenderer sr { get; private set; }
+
+    #endregion
+
+    // Properties set in code.
+    #region Code Properties
+
+    /// <summary>
+    /// The <see cref="SpriteRenderer"/> component on the Heart object.
+    /// </summary>
+    private SpriteRenderer sr { get; set; }
+
+    #endregion
+
+    // Built-in Unity Functions
+    #region Unity Functions
+
+    private void Awake()
+    {
+        InitializeCodeProperties();
+    }
 
     private void Start()
     {
-        sr = gameObject.GetComponent<SpriteRenderer>();
-        transform.parent.gameObject.GetComponent<Health>().HPUpdated += Health_Changed;
+        StoredClasses.Player_HP.HPUpdated += Health_Changed;
     }
 
+    #endregion
+
+    // Initialization
+    #region Initialization
+
+    private void InitializeCodeProperties()
+    {
+        sr = gameObject.GetComponent<SpriteRenderer>();
+    }
+
+    #endregion
+
+    // Event Subscribers
+    #region Subscribers
+
+    /// <summary>
+    /// Subscriber to the <see cref="Health.HPUpdated"/> event.
+    /// Determines whether or not the Heart should be visible.
+    /// </summary>
+    /// <param name="new_HP">The new HP.</param>
     public void Health_Changed(int new_HP)
     {
         if (ID >= new_HP)
@@ -22,4 +68,7 @@ public class Heart : MonoBehaviour
             sr.color = new_color;
         }
     }
+
+    #endregion
+
 }

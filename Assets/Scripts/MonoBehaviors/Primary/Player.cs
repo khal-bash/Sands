@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using DTO.Delegates;
 using UnityEngine;
-
-public delegate void Notify();
-public delegate void GameObjectAction(GameObject gameObject);
 
 /// <summary>
 /// Governs the behavior of the user-controlled player.
@@ -11,7 +7,8 @@ public delegate void GameObjectAction(GameObject gameObject);
 public class Player : MonoBehaviour
 {
 
-    public event GameObjectAction Damage;
+
+    public event GameObjectInputAction Damage;
 
     // Properties set in the Inspector
     #region Inspector Properties
@@ -41,7 +38,7 @@ public class Player : MonoBehaviour
     public int Dash_Length;
 
     /// <summary>
-    /// Gets or sets he <c>GameObject</c> instantiated when the player fires the mining beam.
+    /// Gets or sets the <c>GameObject</c> instantiated when the player fires the mining beam.
     /// </summary>
     public GameObject Beam;
 
@@ -71,7 +68,7 @@ public class Player : MonoBehaviour
     public bool Glitchy { get; set; }
 
     /// <summary>
-    /// If <c>Glitchy</c>, gets the Glitch Zone that is causing the beam to be glitchy.
+    /// If <see cref="Glitchy"/>, gets the <see cref="GameObject"/> of the <see cref="Glitch"/> that is causing the beam to be glitchy.
     /// </summary>
     public GameObject Glitch_Zone { get; set; }
 
@@ -84,13 +81,18 @@ public class Player : MonoBehaviour
     // Built-in Unity Functions
     #region Unity Functions
 
-    void Start()
+    private void Awake()
     {
-        transform.position = Vector3.zero;
         InitializeCodeProperties();
     }
 
-    void Update()
+    private void Start()
+    {
+        DTO.Storage.Operations.Fill_Storage();
+        transform.position = Vector3.zero;
+    }
+
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -110,7 +112,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         Move();
         ManageDash();
@@ -133,7 +135,7 @@ public class Player : MonoBehaviour
         Glitchy = false;
         Glitch_Zone = null;
         Game_Log = new History();
-        HP = GameObject.Find("Health Display").GetComponent<Health>();
+        HP = GameObject.Find("Health Display").GetComponent<Health>();     
     }
     
     #endregion
