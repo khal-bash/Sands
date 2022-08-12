@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DTO.Storage;
 
 /// <summary>
 /// Governs the behavior of the spawned Beam on fire
@@ -27,10 +28,8 @@ public class Beam : MonoBehaviour
     int Frame { get; set; }
 
     /// <summary>
-    /// Gets the Player <c>GameObject</c>.
+    /// Whether the beam has been reported to <see cref="Player.History"/>
     /// </summary>
-    Player Player { get; set; }
-
     private bool Archived { get; set; }
 
 
@@ -57,7 +56,7 @@ public class Beam : MonoBehaviour
 
     private void OnDestroy()
     {
-        Player.History.Updating -= GameLogUpdating;
+        StoredClasses.Player_History.Updating -= GameLogUpdating;
     }
 
     #endregion
@@ -71,9 +70,26 @@ public class Beam : MonoBehaviour
     private void InitializeProperties()
     {
         Frame = 0;
-        Player = GameObject.Find("Player").GetComponent<Player>();
-        Player.History.Updating += GameLogUpdating;
+        StoredClasses.Player_History.Updating += GameLogUpdating;
         Archived = false;
+    }
+
+    #endregion
+
+    // Event Subscribers
+    #region Events
+
+    /// <summary>
+    /// Subscirber to the <see cref="History.Updating"/> event.
+    /// </summary>
+    void GameLogUpdating()
+    {
+        if (Archived) { return; }
+        StoredClasses.Player_History.Last.AddBeam(transform.position,
+                                                  transform.rotation,
+                                                  transform.localScale);
+        Archived = true;
+
     }
 
     #endregion
@@ -81,6 +97,10 @@ public class Beam : MonoBehaviour
     // Detecting and collecting hit objects
     #region Mining
 
+    /// <summary>
+    /// Collects all detected objects.
+    /// </summary>
+    /// <param name="mask"> The layers on which to detect collectable objects. </param>
     protected void MineObjects(LayerMask mask)
     {
         CollectObjectsHit(DetectObjects(mask));
@@ -119,21 +139,10 @@ public class Beam : MonoBehaviour
         Collectable collectable = hit.collider.gameObject.GetComponent<Collectable>();
         if (collectable != null)
         {
-            Player.Inventory.AddItem(collectable.Type);
+            StoredClasses.Player_Inventory.AddItem(collectable.Type);
             Destroy(collectable.gameObject);
         }
     }
     #endregion
-
-    void GameLogUpdating()
-    {
-        if (!Archived)
-        {
-            Player.History.Last.AddBeam(transform.position,
-                                         transform.rotation,
-                                         transform.localScale);
-            Archived = true;
-        }
-    }
 
 }

@@ -38,9 +38,19 @@ namespace Utilities
         #endregion
     }
 
+    /// <summary>
+    /// Class containing various useful visual functions.
+    /// </summary>
     public class Visual
     {
 
+        /// <summary>
+        /// Changes a color's opacity. This change is not applied to the reference color,
+        /// rather a new color is outputted.
+        /// </summary>
+        /// <param name="old_color">The original color.</param>
+        /// <param name="opacity">The desired opacity.</param>
+        /// <returns>A new <see cref="Color"/> with the same RGB values and updated opacity.</returns>
         public static Color ChangeOpacity(Color old_color, float opacity)
         {
             return new Color(old_color.r, old_color.g, old_color.b, a: opacity);

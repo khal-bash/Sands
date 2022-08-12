@@ -8,20 +8,6 @@ using UnityEngine;
 public class Inventory
 {
 
-    public Inventory()
-    {
-        PopulateItemsDict();
-    }
-
-    public Inventory(int type0 = 0, int type1 = 0, int type2 = 0, int type3 = 0)
-    {
-        PopulateItemsDict();
-        Items[CollectableType.type0] = type0;
-        Items[CollectableType.type1] = type1;
-        Items[CollectableType.type2] = type2;
-        Items[CollectableType.type3] = type3;
-    }
-
     // Important Properties
     #region Properties
 
@@ -43,8 +29,22 @@ public class Inventory
 
     #endregion
 
-    // Initialization on Construction
+    // Class Construction
     #region Initialization
+
+    public Inventory()
+    {
+        PopulateItemsDict();
+    }
+
+    public Inventory(int type0 = 0, int type1 = 0, int type2 = 0, int type3 = 0)
+    {
+        PopulateItemsDict();
+        Items[CollectableType.type0] = type0;
+        Items[CollectableType.type1] = type1;
+        Items[CollectableType.type2] = type2;
+        Items[CollectableType.type3] = type3;
+    }
 
     /// <summary>
     /// Initializes the <see cref="Items"/> property.
@@ -96,6 +96,9 @@ public class Inventory
 
     #endregion
 
+    // Static Methods on Inventory
+    #region Static Methods
+
     public static Inventory operator -(Inventory a, Inventory b)
     {
         var c = new Inventory();
@@ -109,17 +112,22 @@ public class Inventory
 
     }
 
+    /// <summary>
+    /// Whether inventory1 is a subset of inventory2.
+    /// </summary>
     public static bool IsSubInventory(Inventory inventory1, Inventory inventory2)
     {
         bool truth = true;
 
         foreach (CollectableType item in inventory1.Items.Keys)
         {
-            truth = truth & (inventory1.Items[item] <= inventory2.Items[item]);
+            truth &= (inventory1.Items[item] <= inventory2.Items[item]);
         }
 
         return truth;
     }
+
+    #endregion
 
 }
 
