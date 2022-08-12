@@ -57,7 +57,7 @@ public class Beam : MonoBehaviour
 
     private void OnDestroy()
     {
-        Player.Game_Log.Updating -= GameLogUpdating;
+        Player.History.Updating -= GameLogUpdating;
     }
 
     #endregion
@@ -72,7 +72,7 @@ public class Beam : MonoBehaviour
     {
         Frame = 0;
         Player = GameObject.Find("Player").GetComponent<Player>();
-        Player.Game_Log.Updating += GameLogUpdating;
+        Player.History.Updating += GameLogUpdating;
         Archived = false;
     }
 
@@ -129,7 +129,7 @@ public class Beam : MonoBehaviour
     {
         if (!Archived)
         {
-            Player.Game_Log.Last.AddBeam(transform.position,
+            Player.History.Last.AddBeam(transform.position,
                                          transform.rotation,
                                          transform.localScale);
             Archived = true;

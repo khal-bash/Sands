@@ -15,6 +15,7 @@ namespace DTO.Storage
     { 
         public static Health Player_HP { get; set; }
         public static Inventory Player_Inventory { get; set; }
+        public static History Player_History { get; set; }
         
     }
 
@@ -45,8 +46,7 @@ namespace DTO.Storage
 
             StoredClasses.Player_HP = StoredComponents.Player.HP;
             StoredClasses.Player_Inventory = StoredComponents.Player.Inventory;
-
-            
+            StoredClasses.Player_History = StoredComponents.Player.History;
 
         }
 

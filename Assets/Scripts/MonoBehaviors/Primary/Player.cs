@@ -8,8 +8,6 @@ public class Player : MonoBehaviour
 {
 
 
-    public event GameObjectInputAction Damage;
-
     // Properties set in the Inspector
     #region Inspector Properties
 
@@ -58,7 +56,7 @@ public class Player : MonoBehaviour
     private bool Dashing { get; set; }
 
     /// <summary>
-    /// Gets the <c>Inventory</c> instance associated with the player.
+    /// Gets the Inventory instance associated with the player.
     /// </summary>
     public Inventory Inventory { get; set; }
 
@@ -72,8 +70,14 @@ public class Player : MonoBehaviour
     /// </summary>
     public GameObject Glitch_Zone { get; set; }
 
-    public History Game_Log { get; set; }
+    /// <summary>
+    /// The complete <see cref="global::History"/> of the game. Used to determine spawn behavior.
+    /// </summary>
+    public History History { get; set; }
 
+    /// <summary>
+    /// The Player's <see cref="Health"/>.
+    /// </summary>
     public Health HP { get; set; }
 
     #endregion
@@ -88,7 +92,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        DTO.Storage.Operations.Fill_Storage();
         transform.position = Vector3.zero;
     }
 
@@ -119,6 +122,33 @@ public class Player : MonoBehaviour
         SaveFrameDataToHistory();
     }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.CompareTag("Enemy"))
+        {
+            OnDamage(collider.gameObject);
+        }
+    }
+
+    #endregion
+
+    // Events and Raisers
+    #region Events
+
+    /// <summary>
+    /// An event notifying subscribers which object has damaged the player.
+    /// </summary>
+    public event GameObjectInputAction Damage;
+
+    /// <summary>
+    /// The event raiser for <see cref="Damage"/>.
+    /// </summary>
+    /// <param name="enemy">The <see cref="GameObject"/> that caused the damage.</param>
+    protected virtual void OnDamage(GameObject enemy)
+    {
+        Damage?.Invoke(enemy);
+    }
+
     #endregion
 
     // Initialization
@@ -134,8 +164,9 @@ public class Player : MonoBehaviour
         Inventory = new Inventory();
         Glitchy = false;
         Glitch_Zone = null;
-        Game_Log = new History();
-        HP = GameObject.Find("Health Display").GetComponent<Health>();     
+        History = new History();
+        HP = GameObject.Find("Health Display").GetComponent<Health>();
+        DTO.Storage.Operations.Fill_Storage();
     }
     
     #endregion
@@ -182,6 +213,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines whether the player would clip through an Impassable object given a proposed move.
+    /// </summary>
+    /// <param name="proposed_move">The proposed change in position.</param>
+    /// <returns><c>True</c> if the move doesn't clip through an object; <c>False</c> if it would. </returns>
     bool CheckForClip(Vector3 proposed_move)
     {
         LayerMask mask = LayerMask.GetMask("Impassable");
@@ -274,25 +310,16 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.CompareTag("Enemy"))
-        {
-            OnDamage(collider.gameObject);
-        }
-    }
-
-    protected virtual void OnDamage(GameObject enemy)
-    {
-        Damage?.Invoke(enemy);
-    }
-
+    // Saving history
     #region Archiving
 
+    /// <summary>
+    /// Saves out the relevant values to <see cref="History"/>.
+    /// </summary>
     void SaveFrameDataToHistory()
     {
         History.FrameHistory frame = new History.FrameHistory(transform.position, Dashing);
-        Game_Log.AddFrameHistory(frame);
+        History.AddFrameHistory(frame);
     }
 
     #endregion
