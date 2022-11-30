@@ -25,7 +25,12 @@ public class Beam : MonoBehaviour
     /// <summary>
     /// Gets the current frame.
     /// </summary>
-    int Frame { get; set; }
+    private int Frame { get; set; }
+
+    /// <summary>
+    /// Whether the beam should be archived.
+    /// </summary>
+    protected bool Archivable { get; set; }
 
     /// <summary>
     /// Whether the beam has been reported to <see cref="Player.History"/>
@@ -85,6 +90,7 @@ public class Beam : MonoBehaviour
     void GameLogUpdating()
     {
         if (Archived) { return; }
+        if (!Archivable) { return; }
         StoredClasses.Player_History.Last.AddBeam(transform.position,
                                                   transform.rotation,
                                                   transform.localScale);

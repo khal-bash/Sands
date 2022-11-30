@@ -11,6 +11,7 @@ public class Beam_Player : Beam
 
     private void Start()
     {
+        Archivable = true;
         LayerMask mask = LayerMask.GetMask("Collectable");
         MineObjects(mask);
     }

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+
 using UnityEngine;
 
 /// <summary>
@@ -78,20 +80,21 @@ public class Inventory
     /// <returns>A string encoding <see cref="Items"/></returns>
     public string DebugRead()
     {
-        string print = "";
+        var sb = new StringBuilder();
 
         foreach (CollectableType type in Items.Keys)
         {
-            print += Items[type].ToString();
-            print += ", ";
+            sb.Append(Items[type].ToString());
+            sb.Append(", ");
         }
+        sb.Remove(sb.Length, 1);
 
         if (Items.Count == 0)
         {
-            print = "Inventory is empty.";
+            return "Inventory is empty.";
         }
 
-        return print;
+        return sb.ToString();
     }
 
     #endregion

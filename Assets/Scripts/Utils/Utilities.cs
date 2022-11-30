@@ -28,11 +28,24 @@ namespace Utilities
             return new Vector3(0, 0, euler_z);
         }
 
+        /// <summary>
+        /// Gets the angle between two vectors
+        /// </summary>
+        /// <returns>The angle in radians.</returns>
         public static float GetAngleBetween(Vector3 vector1, Vector3 vector2)
         {
             float dot_product = Vector3.Dot(vector1, vector2);
             float theta = Mathf.Acos(dot_product / (vector1.magnitude * vector2.magnitude));
             return theta;
+        }
+
+        /// <summary>
+        /// Gets the euler angles perdendicular to a Vector2 direction
+        /// </summary>
+        /// <returns>Vector3 of Euler Angles (x,y = 0) </returns>
+        public static Vector3 GetEulerAnglesPerpendicularToVector2(Vector2 direction)
+        {
+            return Get2DRotationFromVector3(direction, convention: 90);
         }
 
         #endregion

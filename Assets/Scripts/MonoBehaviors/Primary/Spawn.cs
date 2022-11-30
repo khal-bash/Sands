@@ -28,7 +28,7 @@ public class Spawn : MonoBehaviour
     /// <summary>
     /// The number of <see cref="FixedUpdate"/> ticks since this object was instantiated.
     /// </summary>
-    int Fixed_Frame = 0;
+    private int Fixed_Frame = 0;
 
     #endregion
 

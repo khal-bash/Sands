@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace DTO.Storage
 {
@@ -50,6 +51,18 @@ namespace DTO.Storage
         /// The Player's <see cref="Transform"/> component.
         /// </summary>
         public static Transform Player_Transform { get; set; }
+    }
+
+    /// <summary>
+    /// A class that stores miscellaneous components.
+    /// </summary>
+    public static class StoredMisc 
+    {
+
+       /// <summary>
+       /// A list containing the Vector2s Up, Down, Left and Right
+       /// </summary>
+       public static List<Vector2> UDLR = new List<Vector2> { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
     }
 
     /// <summary>

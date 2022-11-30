@@ -1,5 +1,6 @@
 using UnityEngine;
 using DTO.Storage;
+using System;
 
 /// <summary>
 /// Governs the behavior of the Spawn-spawned beam.
@@ -23,6 +24,17 @@ public class Beam_Spawn : Beam
     private void Start()
     {
         DealDamageToPlayerIfHit();
+        InitializeProperties();
+    }
+
+    #endregion
+
+    // Initialization
+    #region Initialization
+
+    private void InitializeProperties()
+    {
+        Archivable = false;
     }
 
     #endregion

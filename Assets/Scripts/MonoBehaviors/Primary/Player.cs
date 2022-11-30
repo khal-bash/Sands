@@ -189,22 +189,22 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            proposed_move = (dash_adjusted_speed * Vector3.up);
+            proposed_move += (dash_adjusted_speed * Vector3.up);
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            proposed_move = (dash_adjusted_speed * Vector3.left);
+            proposed_move += (dash_adjusted_speed * Vector3.left);
         }
 
         if (Input.GetKey(KeyCode.S))
         {
-            proposed_move = (dash_adjusted_speed * Vector3.down);
+            proposed_move += (dash_adjusted_speed * Vector3.down);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            proposed_move = (dash_adjusted_speed * Vector3.right);
+            proposed_move += (dash_adjusted_speed * Vector3.right);
         }
 
         if (CheckForClip(proposed_move))
@@ -279,10 +279,9 @@ public class Player : MonoBehaviour
         {
             SpawnBeam();
         }
-        else {
-
+        else
+        {
             Glitch_Zone.GetComponent<Glitch>().ShowGlitchZone();
-
         }
 
     }
@@ -292,8 +291,11 @@ public class Player : MonoBehaviour
     /// </summary>
     void SpawnBeam()
     {
+
+        Transform crosshairs_transform = gameObject.transform.GetChild(0);
+
         ///localPosition essentially uses parent.localScale as the unit vectors, so this need to be corrected.
-        Vector3 line_of_fire = Vector3.Scale(gameObject.transform.GetChild(0).localPosition, transform.localScale);
+        Vector3 line_of_fire = Vector3.Scale(crosshairs_transform.localPosition, transform.localScale);
 
         Vector3 euler = Utilities.Vector.Get2DRotationFromVector3(line_of_fire);
 
