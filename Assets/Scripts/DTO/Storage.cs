@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace DTO.Storage
@@ -56,13 +57,34 @@ namespace DTO.Storage
     /// <summary>
     /// A class that stores miscellaneous components.
     /// </summary>
-    public static class StoredMisc 
+    public static class StoredConstants 
     {
 
-       /// <summary>
-       /// A list containing the Vector2s Up, Down, Left and Right
-       /// </summary>
-       public static List<Vector2> UDLR = new List<Vector2> { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
+        /// <summary>
+        /// A list containing the Vector2s Up, Down, Left and Right
+        /// </summary>
+        public static List<Vector2Int> UDLR = new List<Vector2Int> { Vector2Int.up,
+                                                                     Vector2Int.down,
+                                                                     Vector2Int.left,
+                                                                     Vector2Int.right };
+
+        /// <summary>
+        /// A list containing the Vector2s UL, DL, UR, and DR. These are, critically, NOT unit vectors.
+        /// </summary>
+        public static List<Vector2Int> DiagonalAdjacencies = new List<Vector2Int> { Vector2Int.up + Vector2Int.left,
+                                                                                    Vector2Int.down + Vector2Int.left,
+                                                                                    Vector2Int.up + Vector2Int.right,
+                                                                                    Vector2Int.down + Vector2Int.right };
+    
+        /// <summary>
+        /// A list containing all king's move from a square.
+        /// </summary>
+        public static List<Vector2Int> Adjacencies {
+            get
+            {
+                return Enumerable.Concat<Vector2Int>(UDLR, DiagonalAdjacencies).ToList();
+            }
+        }
     }
 
     /// <summary>

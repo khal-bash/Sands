@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7547928358460168503}
   - component: {fileID: 7547928358460168502}
+  - component: {fileID: -1482463892596804049}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -43,5 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6757129e7e350b14da926580efd76652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorObject: {fileID: 0}
-  floors: []
+  floorObject: {fileID: 8747611677096321358, guid: 9629b8fe383d7074891da9e54b7c13dc, type: 3}
+--- !u!114 &-1482463892596804049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547928358460168501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5851637d3608c3a4882208ab37e9dd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

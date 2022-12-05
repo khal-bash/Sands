@@ -95,10 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff11cf20041c29d40a7f465f0fa7fd7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainColor: {r: 1, g: 1, b: 1, a: 1}
   size: 20
-  matrix_X: 0
-  matrix_Y: 0
   wall: {fileID: 391884857599476192, guid: b89193e2db0e3f64c97d140aa4dbb5fe, type: 3}
   gate: {fileID: 391884857599476192, guid: bcc1219fcdc6a3e478f4b983b3091fd8, type: 3}
-  neighbors: 00000000

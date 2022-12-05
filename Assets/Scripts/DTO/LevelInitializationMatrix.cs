@@ -13,13 +13,39 @@ namespace DTO.Setup
     public class LevelInitializationMatrix
     {
 
+        //Custom Indexers for convenience
+        #region Custom Indexers
+
+        /// <summary>
+        /// World Coordinates Indexer. Centers the matrix at (2 , 2)
+        /// </summary>
+        /// <param name="x">The x value in range (-2, 2) </param>
+        /// <param name="y">The y value in range (-2, 2)</param>
+        /// <returns>The floor at the indexed location, if one exists.</returns>
+        public Floor this[int x, int y] {
+            get { return backgroundMatrix[x + 2, y + 2]; }
+            set { backgroundMatrix[x + 2 , y + 2] = value; }
+        }
+
+        /// <summary>
+        /// World Coordinates Indexer. Centers the matrix at (2 , 2)
+        /// </summary>
+        /// <param name="vector">The x, y values in range (-2, 2) as a vector.</param>
+        /// <returns>The floor at the indexed location, if one exists.</returns>
+        public Floor this[Vector2Int vector] {
+            get { return this[vector.x, vector.y]; }
+            set { this[vector.x, vector.y] = value; }
+        }
+
+        #endregion
+
         //Properties set in code
         #region Code Properties
 
         /// <summary>
-        /// A 5x5 matrix in raw form (indexed from [0,0] -> [4,4])
+        /// The background 5x5 matrix in raw form (indexed from [0,0] -> [4,4])
         /// </summary>
-        public Floor[,] rawMatrix { get; private set; }
+        private Floor[,] backgroundMatrix { get; set; }
 
         #endregion
 
@@ -28,55 +54,29 @@ namespace DTO.Setup
 
         public LevelInitializationMatrix()
         {
-            rawMatrix = new Floor[5, 5];
+            backgroundMatrix = new Floor[5, 5];
         }
 
         #endregion
 
-        //Editing the matrix
-        #region Editing
-
         /// <summary>
-        /// Adds a floor to the <see cref="rawMatrix"/>.
+        /// Checks to see if a member of this matrix has a neighbor in the given direction.
         /// </summary>
-        /// <param name="x">The x-value in the matrix from -2 -> 2.</param>
-        /// <param name="y">The y-value in the matrix from -2 -> 2.</param>
-        /// <param name="floor">The floor to be added.</param>
-        public void AddFloorFromWorldCoordinates(int x, int y, Floor floor)
-        {
-
-            x += 3; y += 3;
-            rawMatrix[x, y] = floor;
-            floor.matrix_X = x; floor.matrix_Y = y;
-        }
-
-        #endregion
-
-        //Querying the matrix
-        #region Querying
-
-        /// <summary>
-        /// Takes in a vector2 in world coordinates (x, y \in [-2,2])
-        /// and returns the floor at that location if it exists.
-        /// </summary>
-        /// <param name="index">The index of the floor in the matrix.</param>
+        /// <param name="location">The location of the floor.</param>
+        /// <param name="direction">The direction of the neighbor.</param>
         /// <returns></returns>
-        public Floor IndexFromWorldCoordinatesVector(Vector2 index)
+        public bool CheckForNeighbor(Vector2Int location, Vector2Int direction)
         {
             try
             {
-                int x = (int) index.x + 3;
-                int y = (int) index.y + 3;
-                return rawMatrix[x, y];
+                if (this[location + direction] != null)
+                {
+                    return true;
+                }
             }
-            catch (IndexOutOfRangeException)
-            {
-                return null;
-            }
-            
+            catch (IndexOutOfRangeException) { }
+            return false;
         }
-
-        #endregion
 
     }
 }

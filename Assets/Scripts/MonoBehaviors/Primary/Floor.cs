@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DTO.Setup;
@@ -14,24 +15,9 @@ public class Floor : MonoBehaviour
     #region Inspector Properties
 
     /// <summary>
-    /// The background color of the floor.
-    /// </summary>
-    public Color mainColor = Color.white;
-
-    /// <summary>
     /// The size in units of the floor.
     /// </summary>
     public int size = 20;
-
-    /// <summary>
-    /// The x-coordinate of this floor in the <see cref="DTO.Setup.LevelInitializationMatrix"/>
-    /// </summary>
-    public int matrix_X;
-
-    /// <summary>
-    /// The x-coordinate of this floor in the <see cref="DTO.Setup.LevelInitializationMatrix"/>
-    /// </summary>
-    public int matrix_Y;
 
     /// <summary>
     /// The wall prefab that this object will instantiate on its borders
@@ -48,20 +34,74 @@ public class Floor : MonoBehaviour
     //Properties set in code
     #region Code Properties
 
+    /// <summary>
+    /// The background color of the floor.
+    /// </summary>
+    public Color mainColor { get; set; }
+
+    /// <summary>
+    /// The neighbors of this floor.
+    /// </summary>
     public Neighbors neighbors { get; set; } = new Neighbors();
+
+    /// <summary>
+    /// The coordinates of the matrix in world position.
+    /// </summary>
+    public Vector2Int matrixWorldPosition { get; set; }
+
+    /// <summary>
+    /// The coordinates of the matrix in raw position.
+    /// </summary>
+    public Vector2Int matrixRawPosition { get { return matrixWorldPosition + new Vector2Int(2, 2); } }
+
+    /// <summary>
+    /// A UUID for identification purposes.
+    /// </summary>
+    public Guid UUID = Guid.NewGuid();
+
+    /// <summary>
+    /// The visual components of the floor.
+    /// </summary>
+    public FloorVisuals visuals = new FloorVisuals();
 
     #endregion
 
     //Initialization
     #region Initialization
 
-    private void Start()
+    /// <summary>
+    /// Populates some of the code properties. Essentially this is a constructor,
+    /// but it can't be a constructor because Floor is a MonoBehaviour.
+    /// </summary>
+    /// <param name="theme">The desired theme.</param>
+    /// <param name="matrixWorldCoordinates">The world coordinates of the floor in the <see cref="LevelInitializationMatrix"/>.</param>
+    public void PopulateProperties(Theme theme, Vector2Int matrixWorldCoordinates)
     {
-        var sr = gameObject.GetComponent<SpriteRenderer>();
-        sr.color = mainColor;
+        //This ensures that whenever the theme changes, we update the visuals.
+        visuals.ThemeSet += OnThemeChanged;
 
+        visuals.theme = theme;
+        matrixWorldPosition = matrixWorldCoordinates;
+        neighbors = new Neighbors();
+    }
+
+    public void Start()
+    {
         transform.localScale = new Vector3(size, size, 1);
         neighbors = new Neighbors();
+    }
+
+
+    #endregion
+
+    //Event Handlers
+    #region Event Handlers
+
+    private void OnThemeChanged()
+    {
+        mainColor = visuals.background_color;
+        var sr = gameObject.GetComponent<SpriteRenderer>();
+        sr.color = mainColor;
     }
 
     #endregion
@@ -75,7 +115,7 @@ public class Floor : MonoBehaviour
     public void AddWalls()
     {
 
-        foreach (Vector2 direction in StoredMisc.UDLR)
+        foreach (Vector2 direction in StoredConstants.UDLR)
         {
             if (neighbors.neighbors[direction]){
                 CreateEdge(WallType.half, direction);
