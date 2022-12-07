@@ -14,6 +14,8 @@ namespace DTO.Storage
         /// The Player <see cref="GameObject"/>.
         /// </summary>
         public static GameObject Player { get; set; }
+
+        public static GameObject Generator { get; set; }
     }
 
     /// <summary>
@@ -26,10 +28,7 @@ namespace DTO.Storage
         /// </summary>
         public static Health Player_HP { get; set; }
 
-        /// <summary>
-        /// The Player's <see cref="Inventory"/>.
-        /// </summary>
-        public static Inventory Player_Inventory { get; set; }
+        public static Inventory Player_Inventory { get => StoredComponents.Player.Inventory; set => StoredComponents.Player.Inventory = value; }
 
         /// <summary>
         /// The Game's <see cref="History"/>.
@@ -52,6 +51,8 @@ namespace DTO.Storage
         /// The Player's <see cref="Transform"/> component.
         /// </summary>
         public static Transform Player_Transform { get; set; }
+
+        public static LevelMetaData LevelMetaData { get; set; }
     }
 
     /// <summary>
@@ -108,6 +109,7 @@ namespace DTO.Storage
         private static void MakeFindCalls()
         {
             StoredGameObjects.Player = GameObject.Find("Player");
+            StoredGameObjects.Generator = GameObject.Find("Generator");
         }
 
         /// <summary>
@@ -118,9 +120,9 @@ namespace DTO.Storage
         {
             StoredComponents.Player = StoredGameObjects.Player.GetComponent<Player>();
             StoredComponents.Player_Transform = StoredGameObjects.Player.transform;
+            StoredComponents.LevelMetaData = StoredGameObjects.Generator.GetComponent<LevelMetaData>();
 
             StoredClasses.Player_HP = StoredComponents.Player.HP;
-            StoredClasses.Player_Inventory = StoredComponents.Player.Inventory;
             StoredClasses.Player_History = StoredComponents.Player.History;
 
         }

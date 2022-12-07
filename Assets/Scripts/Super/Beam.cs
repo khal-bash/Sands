@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DTO.Delegates;
 using DTO.Storage;
 
 /// <summary>
@@ -81,11 +82,18 @@ public class Beam : MonoBehaviour
 
     #endregion
 
+    public static  event GameObjectInputAction ItemCollected;
+
     // Event Subscribers
     #region Events
 
+    virtual protected void OnItemCollected(GameObject item)
+    {
+        ItemCollected?.Invoke(item);
+    }
+
     /// <summary>
-    /// Subscirber to the <see cref="History.Updating"/> event.
+    /// SubscrIber to the <see cref="History.Updating"/> event.
     /// </summary>
     void GameLogUpdating()
     {
@@ -146,6 +154,7 @@ public class Beam : MonoBehaviour
         if (collectable != null)
         {
             StoredClasses.Player_Inventory.AddItem(collectable.Type);
+            OnItemCollected(collectable.gameObject);
             Destroy(collectable.gameObject);
         }
     }

@@ -4,19 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DTO.Delegates;
 using System.Linq;
-
-/// <summary>
-/// The possible themes of floors.
-/// </summary>
-public enum Theme
-{
-    unspecified,
-    desert,
-    ice,
-    grasslands,
-    temple,
-    snow
-}
+using DTO.Visuals;
 
 /// <summary>
 /// Class governing the visuals of floors.
@@ -86,40 +74,7 @@ public class FloorVisuals
     /// </summary>
     private void InitializeDependentComponents()
     {
-        switch (theme)
-        {
-            case Theme.desert:
-                CookieCutterInitializer(background_color = new Color32(220, 104, 75, 255)
-                    );
-                break;
-            case Theme.ice:
-                CookieCutterInitializer(background_color = new Color32(60, 116, 189, 255)
-                    );
-                break;
-            case Theme.grasslands:
-                CookieCutterInitializer(background_color = new Color32(189, 242, 99, 255)
-                    );
-                break;
-            case Theme.temple:
-                CookieCutterInitializer(background_color = new Color32(45, 28, 20, 255)
-                    );
-                break;
-            case Theme.snow:
-                CookieCutterInitializer(background_color = new Color32(208, 216, 217, 255)
-                    );
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Sets the dependent properties.
-    /// </summary>
-    /// <param name="background">The background color.</param>
-    private void CookieCutterInitializer(Color background)
-    {
-        background_color = background;
+        background_color = ThemeHandler.backgroundColor(theme);
     }
 
     #endregion

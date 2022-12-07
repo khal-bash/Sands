@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1482463892596804049, guid: bdc18c9f179835c4086908786c250395, type: 3}
       propertyPath: numberOfFloors
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7547928358460168501, guid: bdc18c9f179835c4086908786c250395, type: 3}
       propertyPath: m_Name
@@ -209,6 +209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc4f521e98782142a991fece3016fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectable: {fileID: 7252731164099755712, guid: 17781caa4d32a7948a7b9d2b2f2eac2e, type: 3}
+  respawn_time: 3
 --- !u!1 &188070980
 GameObject:
   m_ObjectHideFlags: 0

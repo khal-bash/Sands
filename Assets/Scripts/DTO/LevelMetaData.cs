@@ -32,6 +32,10 @@ public class LevelMetaData : MonoBehaviour
     /// </summary>
     public System.Random random { get; private set;}
 
+    public LevelInitializationMatrix floorMatrix { get => gameObject.GetComponent<LevelSetupWizard>().floorMatrix; }
+
+    public List<Floor> floors { get => gameObject.GetComponent<LevelSetupWizard>().floors;  }
+
     #endregion
 
     //Initialization

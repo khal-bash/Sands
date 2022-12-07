@@ -1,5 +1,6 @@
 using UnityEngine;
 using DTO.Storage;
+using System;
 
 /// <summary>
 /// Gives an Impassable object an inventory-checking requirement behavior.
@@ -11,28 +12,34 @@ public class Gate : MonoBehaviour
     #region Inspector Properties
 
     /// <summary>
-    /// The required number of <see cref="Inventory.CollectableType.type0"/>
+    /// The required number of <see cref="Inventory.CollectableType.diamond"/>
     /// objects required to open the gate.
     /// </summary>
-    public int type0;
+    public int diamond;
 
     /// <summary>
-    /// The required number of <see cref="Inventory.CollectableType.type1"/>
+    /// The required number of <see cref="Inventory.CollectableType.seashell"/>
     /// objects required to open the gate.
     /// </summary>
-    public int type1;
+    public int seashell;
 
     /// <summary>
-    /// The required number of <see cref="Inventory.CollectableType.type2"/>
+    /// The required number of <see cref="Inventory.CollectableType.lavender"/>
     /// objects required to open the gate.
     /// </summary>
-    public int type2;
+    public int lavender;
 
     /// <summary>
-    /// The required number of <see cref="Inventory.CollectableType.type3"/>
+    /// The required number of <see cref="Inventory.CollectableType.ruby"/>
     /// objects required to open the gate.
     /// </summary>
-    public int type3;
+    public int ruby;
+
+    /// <summary>
+    /// The required number of <see cref="Inventory.CollectableType.coal"/>
+    /// objects required to open the gate.
+    /// </summary>
+    public int coal;
 
     #endregion
 
@@ -48,6 +55,15 @@ public class Gate : MonoBehaviour
     /// The requirements set in the Inspector in <see cref="Inventory"/> form.
     /// </summary>
     private Inventory requirements;
+
+    public bool isVertical { get => DetermineWhetherVertical(); }
+
+    private bool DetermineWhetherVertical()
+    {
+        Transform left = gameObject.transform.GetChild(0);
+        Transform right = gameObject.transform.GetChild(1);
+        return (Math.Abs(left.position.y - right.position.y) < 0.1);
+    }
 
     #endregion
 
@@ -81,7 +97,7 @@ public class Gate : MonoBehaviour
     // Inititalizes the Code Properties
     private void InitializeCodeProperties()
     {
-        requirements = new Inventory(type0, type1, type2, type3);
+        requirements = new Inventory(diamond, seashell, lavender, ruby);
     }
 
     #endregion

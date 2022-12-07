@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DTO.Setup;
 using DTO.Storage;
+using DTO.Visuals;
 
 /// <summary>
 /// Class governing the behavior of Floors.
@@ -33,6 +34,8 @@ public class Floor : MonoBehaviour
 
     //Properties set in code
     #region Code Properties
+
+    public Theme theme { get => visuals.theme; }
 
     /// <summary>
     /// The background color of the floor.

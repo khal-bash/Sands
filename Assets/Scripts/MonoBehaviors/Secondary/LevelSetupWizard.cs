@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using DTO.Setup;
 using DTO.Storage;
+using DTO.Visuals;
 using System;
 
 /// <summary>
@@ -35,7 +36,7 @@ public class LevelSetupWizard : MonoBehaviour
     /// <summary>
     /// List tracking the floors in the Level.
     /// </summary>
-    private List<Floor> floors { get; set; } = new List<Floor>();
+    public List<Floor> floors { get; set; } = new List<Floor>();
 
     #endregion
 

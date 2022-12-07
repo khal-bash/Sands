@@ -18,16 +18,33 @@ public class Inventory
     /// </summary>
     public enum CollectableType
     {
-        type0,
-        type1,
-        type2,
-        type3
+        diamond,
+        seashell,
+        lavender,
+        ruby,
+        coal,
+        unspecified
     }
 
     /// <summary>
     /// The amount of each item in the player's inventory.
     /// </summary>
     public SortedDictionary<CollectableType, int> Items { get; private set; }
+
+    private IEnumerable<CollectableType> collectableTypes = (IEnumerable<CollectableType>) System.Enum.GetValues(typeof(CollectableType));
+
+    public int dimension
+    {
+        get 
+        {
+            int _dimension = 0;
+            foreach(CollectableType type in collectableTypes)
+            {
+                if(Items[type] > 0) { _dimension++; }
+            }
+            return _dimension;
+        }
+    }
 
     #endregion
 
@@ -39,13 +56,14 @@ public class Inventory
         PopulateItemsDict();
     }
 
-    public Inventory(int type0 = 0, int type1 = 0, int type2 = 0, int type3 = 0)
+    public Inventory(int type0 = 0, int type1 = 0, int type2 = 0, int type3 = 0, int type4 = 0)
     {
         PopulateItemsDict();
-        Items[CollectableType.type0] = type0;
-        Items[CollectableType.type1] = type1;
-        Items[CollectableType.type2] = type2;
-        Items[CollectableType.type3] = type3;
+        Items[CollectableType.diamond] = type0;
+        Items[CollectableType.seashell] = type1;
+        Items[CollectableType.lavender] = type2;
+        Items[CollectableType.ruby] = type3;
+        Items[CollectableType.coal] = type4;
     }
 
     /// <summary>
@@ -54,7 +72,7 @@ public class Inventory
     void PopulateItemsDict() 
     {
         Items = new SortedDictionary<CollectableType, int>();
-        foreach (CollectableType type in System.Enum.GetValues(typeof(CollectableType)))
+        foreach (CollectableType type in collectableTypes)
         {
             Items.Add(type, 0);
         }
@@ -87,7 +105,7 @@ public class Inventory
             sb.Append(Items[type].ToString());
             sb.Append(", ");
         }
-        sb.Remove(sb.Length, 1);
+        sb = sb.Remove(sb.Length - 5, 5);
 
         if (Items.Count == 0)
         {
