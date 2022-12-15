@@ -18,7 +18,7 @@ public class Floor : MonoBehaviour
     /// <summary>
     /// The size in units of the floor.
     /// </summary>
-    public int size = 20;
+    public static int size = 20;
 
     /// <summary>
     /// The wall prefab that this object will instantiate on its borders
@@ -88,6 +88,11 @@ public class Floor : MonoBehaviour
         neighbors = new Neighbors();
     }
 
+    #endregion
+
+    //Built-in Unity Functions
+    #region Unity Functions
+
     public void Start()
     {
         transform.localScale = new Vector3(size, size, 1);
@@ -115,19 +120,22 @@ public class Floor : MonoBehaviour
     /// <summary>
     /// Adds walls to the floor based on the location of the neighbor floors;.
     /// </summary>
-    public void AddWalls()
+    public List<GameObject> AddWallsAndGates()
     {
+        var createdWallsAndGates = new List<GameObject>();
 
         foreach (Vector2 direction in StoredConstants.UDLR)
         {
             if (neighbors.neighbors[direction]){
-                CreateEdge(WallType.half, direction);
+                createdWallsAndGates.AddRange(CreateEdge(WallType.half, direction));
             }
             else
             {
-                CreateEdge(WallType.full, direction);
+                createdWallsAndGates.AddRange(CreateEdge(WallType.full, direction));
             }
         }
+
+        return createdWallsAndGates;
 
     }
 
@@ -136,10 +144,10 @@ public class Floor : MonoBehaviour
     /// </summary>
     /// <param name="type">Whether the wall is a full wall or half-wall.</param>
     /// <param name="direction">Which edge of the floor is being created.</param>
-    private void CreateEdge(WallType type, Vector2 direction)
+    private List<GameObject> CreateEdge(WallType type, Vector2 direction)
     { 
-        if (type == WallType.half){CreateGatedWall(direction);}
-        else{CreateFullWall(direction);}
+        if (type == WallType.half){return CreateGatedWall(direction);}
+        else{return CreateFullWall(direction);}
 
     }
 
@@ -147,10 +155,10 @@ public class Floor : MonoBehaviour
     /// Creates a wall with a gate.
     /// </summary>
     /// <param name="direction">Which edge the wall occupies.</param>
-    private void CreateGatedWall(Vector2 direction)
+    private List<GameObject> CreateGatedWall(Vector2 direction)
     {
 
-        Vector3 eulerAngles = Utilities.Vector.GetEulerAnglesPerpendicularToVector2(direction);
+        Vector3 eulerAngles = Utilities.Math.Vector.GetEulerAnglesPerpendicularToVector2(direction);
 
         GameObject rightWall = Instantiate(wall, gameObject.transform);
         rightWall.GetComponent<Wall>().type = WallType.half;
@@ -168,15 +176,17 @@ public class Floor : MonoBehaviour
         middleGate.transform.localPosition = direction * 0.5f;
         middleGate.transform.localScale = new Vector3(0.2f, 0.0125f, 1);
         middleGate.transform.localEulerAngles = eulerAngles;
+
+        return new List<GameObject>() { rightWall, leftWall, middleGate };
     }
 
     /// <summary>
     /// Creates a full wall.
     /// </summary>
     /// <param name="direction">Which edge the wall occupies.</param>
-    private void CreateFullWall(Vector2 direction)
+    private List<GameObject> CreateFullWall(Vector2 direction)
     {
-        Vector3 eulerAngles = Utilities.Vector.GetEulerAnglesPerpendicularToVector2(direction);
+        Vector3 eulerAngles = Utilities.Math.Vector.GetEulerAnglesPerpendicularToVector2(direction);
 
         GameObject fullWall = Instantiate(wall, gameObject.transform);
         fullWall.GetComponent<Wall>().type = WallType.full;
@@ -184,6 +194,7 @@ public class Floor : MonoBehaviour
         fullWall.transform.localScale = new Vector3(1, 0.0125f, 1);
         fullWall.transform.localEulerAngles = eulerAngles;
 
+        return new List<GameObject>() { fullWall };
     }
 
     #endregion

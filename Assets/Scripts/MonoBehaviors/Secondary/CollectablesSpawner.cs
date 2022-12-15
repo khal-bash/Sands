@@ -5,16 +5,40 @@ using Random = System.Random;
 using UnityEngine;
 using DTO.Storage;
 
+/// <summary>
+/// Randomly spawns collectables in zones.
+/// </summary>
 public class CollectablesSpawner : MonoBehaviour
 {
 
+    //Properties set in the inspector.
+    #region Inspector Properties
+
+    /// <summary>
+    /// The collectable prefab to spawn
+    /// </summary>
     public GameObject collectable;
 
+    /// <summary>
+    /// The time to wait after a zone is emptied to spawn a new collectable.
+    /// </summary>
     public float respawn_time;
 
+    #endregion
+
+    //Properties set in code
+    #region Code Properties
+    
+    /// <summary>
+    /// The random number generator specified in the <see cref="LevelMetaData"/>.
+    /// </summary>
     private Random random { get => StoredComponents.LevelMetaData.random; }
 
-    // Start is called before the first frame update
+    #endregion
+
+    //Built-in Unity Functions
+    #region Unity Functions
+
     void Start()
     {
 
@@ -26,12 +50,21 @@ public class CollectablesSpawner : MonoBehaviour
         }
     }
 
+    #endregion
+
+    //Placing Collectables
+    #region Collectables
+
+    /// <summary>
+    /// Randomly places a collectable in the given floor.
+    /// </summary>
+    /// <param name="floor">The floor in which to place the item.</param>
     private void RandomlyPlaceCollectableOnFloor(Floor floor)
     {
         float x = -0.45f + (0.9f * (float)random.NextDouble());
         float y = -0.45f + (0.9f * (float)random.NextDouble());
 
-        float scaleCorrection = (float)(decimal.Divide(1, floor.size));
+        float scaleCorrection = (float)(decimal.Divide(1, Floor.size));
 
         var instantiatedCollectable = Instantiate(collectable, floor.transform);
 
@@ -47,14 +80,25 @@ public class CollectablesSpawner : MonoBehaviour
         instantiatedCollectable.GetComponent<Collectable>().SetVisuals(floor.theme);
     }
 
+    /// <summary>
+    /// Waits for <see cref="respawn_time"/> and then places a collectable on the floor.
+    /// </summary>
+    /// <param name="floor">The floor in which to place the item.</param>
     IEnumerator RandomlyPlaceCollectableOnFloorDuringPlay(Floor floor)
     {
         yield return new WaitForSeconds(respawn_time);
         RandomlyPlaceCollectableOnFloor(floor);
     }
 
+    #endregion
+
+    //Event Subscribers
+    #region Events
+
     private void OnItemCollected(GameObject item)
     {
         StartCoroutine(RandomlyPlaceCollectableOnFloorDuringPlay(item.GetComponent<Collectable>().locale));
     }
+
+    #endregion
 }

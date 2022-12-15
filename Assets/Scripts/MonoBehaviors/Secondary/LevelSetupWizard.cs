@@ -26,6 +26,9 @@ public class LevelSetupWizard : MonoBehaviour
     //Properties set in code
     #region Code Properties
 
+    /// <summary>
+    /// The <see cref="LevelMetaData"/> the wizard should use.
+    /// </summary>
     private LevelMetaData metaData { get; set; }
 
     /// <summary>
@@ -37,6 +40,11 @@ public class LevelSetupWizard : MonoBehaviour
     /// List tracking the floors in the Level.
     /// </summary>
     public List<Floor> floors { get; set; } = new List<Floor>();
+
+    /// <summary>
+    /// List tracking the walls and gates in the Level.
+    /// </summary>
+    public List<GameObject> wallsAndGates { get; set; } = new List<GameObject>();
 
     #endregion
 
@@ -285,12 +293,34 @@ public class LevelSetupWizard : MonoBehaviour
                 floor.neighbors.neighbors[direction] = floorMatrix.CheckForNeighbor(floor.matrixWorldPosition, direction);
             }
 
-            floor.gameObject.transform.position = (Vector2)floor.matrixWorldPosition * floor.size;
-            floor.AddWalls();
+            floor.gameObject.transform.position = (Vector2)floor.matrixWorldPosition * Floor.size;
+            wallsAndGates.AddRange(floor.AddWallsAndGates());
+        }
+
+        RemoveDuplicateWallsAndGates();
+    }
+
+    /// <summary>
+    /// Removes all duplicate walls and gates.
+    /// </summary>
+    private void RemoveDuplicateWallsAndGates()
+    {
+
+        var observedPositions = new List<Vector3>();
+
+        foreach (GameObject wallOrGate in wallsAndGates)
+        {
+            Vector3 objectPosition = wallOrGate.transform.position;
+            if(observedPositions.Contains(objectPosition))
+            {
+                Destroy(wallOrGate);
+                continue;
+            }
+            observedPositions.Add(objectPosition);
         }
     }
 
-    #endregion 
+    #endregion
 
 }
 

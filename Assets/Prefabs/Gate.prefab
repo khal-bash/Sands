@@ -163,6 +163,7 @@ MonoBehaviour:
   lavender: 0
   ruby: 0
   coal: 0
+  UIDisplayPrefab: {fileID: 4363304193019679377, guid: 2f24be0293906f944bb98116acf3f777, type: 3}
 --- !u!61 &-1196071275580505602
 BoxCollider2D:
   m_ObjectHideFlags: 0

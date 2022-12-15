@@ -41,6 +41,8 @@ public class Gate : MonoBehaviour
     /// </summary>
     public int coal;
 
+    public GameObject UIDisplayPrefab;
+
     #endregion
 
     // Properties set in code
@@ -56,14 +58,10 @@ public class Gate : MonoBehaviour
     /// </summary>
     private Inventory requirements;
 
-    public bool isVertical { get => DetermineWhetherVertical(); }
-
-    private bool DetermineWhetherVertical()
-    {
-        Transform left = gameObject.transform.GetChild(0);
-        Transform right = gameObject.transform.GetChild(1);
-        return (Math.Abs(left.position.y - right.position.y) < 0.1);
-    }
+    /// <summary>
+    /// The display spawned in <see cref="DisplayRequirements"/>
+    /// </summary>
+    private GameObject UIDisplay;
 
     #endregion
 
@@ -78,6 +76,7 @@ public class Gate : MonoBehaviour
     private void Update()
     {
         Satisfied = (Inventory.IsSubInventory(requirements, StoredClasses.Player_Inventory));
+        DisplayRequirements();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -86,6 +85,29 @@ public class Gate : MonoBehaviour
         {
             Destroy(gameObject);
             StoredClasses.Player_Inventory -= requirements;
+        }
+    }
+
+    #endregion
+
+    //User Interfacing
+    #region UI
+
+    /// <summary>
+    /// Initializes a <see cref="CollectableRequirementsDisplay"/> to show the gate's requirements.
+    /// </summary>
+    private void DisplayRequirements()
+    {
+        if (Input.GetKeyDown(KeyCode.RightShift))
+        {
+            UIDisplay = Instantiate(UIDisplayPrefab, transform);
+            UIDisplay.GetComponent<CollectableRequirementsDisplay>().ShapeBackground(requirements);
+        }
+
+        if (Input.GetKeyUp(KeyCode.RightShift))
+        {
+            try { Destroy(UIDisplay); }
+            catch (NullReferenceException) { }
         }
     }
 

@@ -1,4 +1,5 @@
 using DTO.Delegates;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -297,7 +298,7 @@ public class Player : MonoBehaviour
         ///localPosition essentially uses parent.localScale as the unit vectors, so this need to be corrected.
         Vector3 line_of_fire = Vector3.Scale(crosshairs_transform.localPosition, transform.localScale);
 
-        Vector3 euler = Utilities.Vector.Get2DRotationFromVector3(line_of_fire);
+        Vector3 euler = Utilities.Math.Vector.Get2DRotationFromVector3(line_of_fire);
 
         Vector3 position = transform.position + (line_of_fire / 2);
         Quaternion rotation = Quaternion.Euler(euler);
