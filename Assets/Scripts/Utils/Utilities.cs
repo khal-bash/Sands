@@ -5,6 +5,9 @@ using UnityEngine;
 namespace Utilities
 {
 
+    /// <summary>
+    /// Class containg mathematical utility functions.
+    /// </summary>
     public class Math
     {
 
@@ -59,6 +62,22 @@ namespace Utilities
             public static Vector3 CorrectForParentScale(Vector3 parentScale)
             {
                 return new Vector3(1 / parentScale.x, 1 / parentScale.y);
+            }
+
+            /// <summary>
+            /// Floors each value in a Vector2.
+            /// </summary>
+            public static Vector2Int Floor(Vector2 vector)
+            {
+                return new Vector2Int(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y));
+            }
+
+            /// <summary>
+            /// Rounds up each value in a Vector2.
+            /// </summary>
+            public static Vector2Int Ceil(Vector2 vector)
+            {
+                return new Vector2Int(Mathf.CeilToInt(vector.x), Mathf.CeilToInt(vector.y));
             }
 
             #endregion

@@ -47,6 +47,11 @@ namespace DTO.Setup
         /// </summary>
         private Floor[,] backgroundMatrix { get; set; }
 
+        /// <summary>
+        /// The origin of the matrix (i.e [0,0]).
+        /// </summary>
+        public Floor origin { get { return this[0, 0]; } }
+
         #endregion
 
         //Class Construction

@@ -1,6 +1,7 @@
 using UnityEngine;
 using DTO.Storage;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// Gives an Impassable object an inventory-checking requirement behavior.
@@ -56,12 +57,37 @@ public class Gate : MonoBehaviour
     /// <summary>
     /// The requirements set in the Inspector in <see cref="Inventory"/> form.
     /// </summary>
-    private Inventory requirements;
+    public Inventory requirements;
 
     /// <summary>
     /// The display spawned in <see cref="DisplayRequirements"/>
     /// </summary>
     private GameObject UIDisplay;
+
+    /// <summary>
+    /// The position of the gate in terms of the floor matrix. Note 
+    /// that the gate isn't actually contained in the floor matrix, since it
+    /// isn't a floor, but rather this value encodes the gate's position
+    /// relative to those floors using 0.5 to mean in between two floors.
+    /// </summary>
+    public Vector2 matrixWorldPosition;
+
+    /// <summary>
+    /// The floors on either side of the gate.
+    /// </summary>
+    public List<Floor> neighbors { get => GetAllNeighboringFloors(); }
+
+    /// <summary>
+    /// Gets the two floors on either side of this gate.
+    /// </summary>
+    /// <returns></returns>
+    private List<Floor> GetAllNeighboringFloors()
+    {
+        var floorMatrix = GameObject.Find("Generator").GetComponent<LevelSetupWizard>().floorMatrix;
+        return new List<Floor>() { floorMatrix[Utilities.Math.Vector.Ceil(matrixWorldPosition)],
+                                       floorMatrix[Utilities.Math.Vector.Floor(matrixWorldPosition)]};
+
+    }
 
     #endregion
 

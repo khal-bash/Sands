@@ -48,6 +48,35 @@ public class Floor : MonoBehaviour
     public Neighbors neighbors { get; set; } = new Neighbors();
 
     /// <summary>
+    /// A list of all gates attached to this floor.
+    /// </summary>
+    public List<Gate> attachedGates { get => GetAllAttachedGates(); }
+
+    /// <summary>
+    /// Gets all the gates attached to this floor.
+    /// </summary>
+    private List<Gate> GetAllAttachedGates()
+    {
+        var output = new List<Gate>();
+        foreach (Vector2Int direction in StoredConstants.UDLR)
+        {
+            foreach (var gate in StoredComponents.LevelSetupWizard.wallsAndGates)
+            {
+                try
+                {
+                    var gateComponent = gate.GetComponent<Gate>();
+                    if (gateComponent.matrixWorldPosition == matrixWorldPosition + (0.5f * (Vector2)direction))
+                    {
+                        output.Add(gateComponent);
+                    }
+                }
+                catch (NullReferenceException) { }
+            }
+        }
+        return output;
+    }
+
+    /// <summary>
     /// The coordinates of the matrix in world position.
     /// </summary>
     public Vector2Int matrixWorldPosition { get; set; }
@@ -176,6 +205,7 @@ public class Floor : MonoBehaviour
         middleGate.transform.localPosition = direction * 0.5f;
         middleGate.transform.localScale = new Vector3(0.2f, 0.0125f, 1);
         middleGate.transform.localEulerAngles = eulerAngles;
+        middleGate.GetComponent<Gate>().matrixWorldPosition = matrixWorldPosition + (0.5f * direction);
 
         return new List<GameObject>() { rightWall, leftWall, middleGate };
     }

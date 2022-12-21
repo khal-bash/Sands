@@ -146,6 +146,10 @@ PrefabInstance:
       propertyPath: floorObject
       value: 
       objectReference: {fileID: 8747611677096321358, guid: 9629b8fe383d7074891da9e54b7c13dc, type: 3}
+    - target: {fileID: 7547928358460168502, guid: bdc18c9f179835c4086908786c250395, type: 3}
+      propertyPath: requirementProbability
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7547928358460168503, guid: bdc18c9f179835c4086908786c250395, type: 3}
       propertyPath: m_RootOrder
       value: 0

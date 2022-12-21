@@ -52,11 +52,19 @@ namespace DTO.Storage
         /// </summary>
         public static Transform Player_Transform { get; set; }
 
+        /// <summary>
+        /// The parameters used to generate the level.
+        /// </summary>
         public static LevelMetaData LevelMetaData { get; set; }
+
+        /// <summary>
+        /// The wizard that sets up the level.
+        /// </summary>
+        public static LevelSetupWizard LevelSetupWizard { get; set; }
     }
 
     /// <summary>
-    /// A class that stores miscellaneous components.
+    /// A class that stores miscellaneous constants.
     /// </summary>
     public static class StoredConstants 
     {
@@ -121,6 +129,7 @@ namespace DTO.Storage
             StoredComponents.Player = StoredGameObjects.Player.GetComponent<Player>();
             StoredComponents.Player_Transform = StoredGameObjects.Player.transform;
             StoredComponents.LevelMetaData = StoredGameObjects.Generator.GetComponent<LevelMetaData>();
+            StoredComponents.LevelSetupWizard = StoredGameObjects.Generator.GetComponent<LevelSetupWizard>();
 
             StoredClasses.Player_HP = StoredComponents.Player.HP;
             StoredClasses.Player_History = StoredComponents.Player.History;

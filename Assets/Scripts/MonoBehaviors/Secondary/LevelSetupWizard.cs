@@ -21,6 +21,13 @@ public class LevelSetupWizard : MonoBehaviour
     /// </summary>
     public GameObject floorObject;
 
+    /// <summary>
+    /// The probability of adding a possible requirement to any gate.
+    /// 0 would mean no gates have requirements, and 1 would mean gates
+    /// have every possible requirement.
+    /// </summary>
+    public float requirementProbability = 0.5f;
+
     #endregion
 
     //Properties set in code
@@ -55,7 +62,7 @@ public class LevelSetupWizard : MonoBehaviour
     {
         InitializeCodeProperties();
         PopulateLevelWithRandomFloors(metaData.numberOfFloors, metaData.random);
-        // CreateSampleLevel();
+        GenerateGateRequirements(metaData.random);
     }
 
     /// <summary>
@@ -307,21 +314,148 @@ public class LevelSetupWizard : MonoBehaviour
     {
 
         var observedPositions = new List<Vector3>();
+        var updatedWallsAndGates = new List<GameObject>();
 
         foreach (GameObject wallOrGate in wallsAndGates)
         {
             Vector3 objectPosition = wallOrGate.transform.position;
+
             if(observedPositions.Contains(objectPosition))
             {
                 Destroy(wallOrGate);
                 continue;
             }
+
+            updatedWallsAndGates.Add(wallOrGate);
             observedPositions.Add(objectPosition);
         }
+
+        wallsAndGates = updatedWallsAndGates;
     }
 
     #endregion
 
+
+    /// <summary>
+    /// Generates random requirements for all gates in the level.
+    /// </summary>
+    /// <param name="random">The random generator to be used.</param>
+    private void GenerateGateRequirements(Random random)
+    {
+
+        var floorsDiscovered = new List<Floor>() { floorMatrix.origin };
+        var gatesAssignedTo = new List<Gate>();
+
+        var collectableTypesDiscovered = new List<Inventory.CollectableType>() 
+        {
+            ThemeHandler.collectableType(floorMatrix.origin.theme)
+        };
+
+        var gateHorizon = EnumerateFirstGateHorizon();
+
+        while (gateHorizon.Count > 0)
+        {
+            AssignRequirementsToNextRandomGate(random, floorsDiscovered, gatesAssignedTo, collectableTypesDiscovered, gateHorizon);
+        }
+    }
+
+    /// <summary>
+    /// Chooses a random gate and then assigns it requirements.
+    /// </summary>
+    /// <param name="random">The random generator to be used.</param>
+    /// <param name="floorsDiscovered">The floors that are reachable by the player.</param>
+    /// <param name="gatesAssignedTo">The gates that already have items assigned to them.</param>
+    /// <param name="collectableTypesDiscovered">The types of collectables that the player has discovered.</param>
+    /// <param name="gateHorizon">The possible gates the the player could reach at this point and are therefore candidates for
+    /// selection.</param>
+    private void AssignRequirementsToNextRandomGate(Random random, List<Floor> floorsDiscovered, List<Gate> gatesAssignedTo, List<Inventory.CollectableType> collectableTypesDiscovered, List<Gate> gateHorizon)
+    {
+        var selection = gateHorizon[random.Next(0, gateHorizon.Count - 1)];
+
+        AssignRequirementsToGate(random, collectableTypesDiscovered, selection);
+        gatesAssignedTo.Add(selection);
+        UpdateGateHorizon(gateHorizon, selection, gatesAssignedTo, floorsDiscovered, collectableTypesDiscovered);
+    }
+
+    /// <summary>
+    /// Decides which items the gate should require.
+    /// </summary>
+    /// <param name="random">The random generator to be used.</param>
+    /// <param name="collectableTypesDiscovered">The types of collectables that the player has discovered.</param>
+    /// <param name="selection">The gate to assign to.</param>
+    private void AssignRequirementsToGate(Random random, List<Inventory.CollectableType> collectableTypesDiscovered, Gate selection)
+    {
+        foreach (var type in collectableTypesDiscovered)
+        {
+            if (random.Next(1, 1000) < (1000 * requirementProbability))
+            {
+                selection.requirements.AddItem(type);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the gate horizon for the first iteration.
+    /// </summary>
+    private List<Gate> EnumerateFirstGateHorizon()
+    {
+        return floorMatrix[Vector2Int.zero].attachedGates;
+    }
+
+    /// <summary>
+    /// Update the gate horizon (the list of all gates we can see and
+    /// therefore can be assigned to next).
+    /// </summary>
+    /// <param name="oldGateHorizon">The current gate horizon.</param>
+    /// <param name="previousSelection">The gate that was just assigned to</param>
+    /// <param name="gatesSet">The gates that have been assigned to.</param>
+    /// <param name="floorsDiscovered">The floors that the player has discovered.</param>
+    /// <param name="typesAvailable">The collectable types that the player has discovered.</param>
+    private void UpdateGateHorizon(List<Gate> oldGateHorizon,
+                                      Gate previousSelection,
+                                      List<Gate> gatesSet,
+                                      List<Floor> floorsDiscovered,
+                                      List<Inventory.CollectableType> typesAvailable)
+    {
+        oldGateHorizon.Remove(previousSelection);
+        Floor newFloor = DiscoverNewFloor(previousSelection, floorsDiscovered);
+
+        var floorCollectableType = ThemeHandler.collectableType(newFloor.theme);
+        if (!typesAvailable.Contains(floorCollectableType)) { typesAvailable.Add(floorCollectableType); }
+
+        CreateGateHorizonWithoutDuplicates(oldGateHorizon, gatesSet, newFloor);
+    }
+
+    /// <summary>
+    /// Determines which gates to add to the gate horizon to avoid duplicates.
+    /// </summary>
+    /// <param name="oldGateHorizon">The current gate horizon.</param>
+    /// <param name="gatesSet">The gates that have been assigned to.</param>
+    /// <param name="newFloor">The new floor that the player just discovered.</param>
+    private void CreateGateHorizonWithoutDuplicates(List<Gate> oldGateHorizon, List<Gate> gatesSet, Floor newFloor)
+    {
+        foreach (Gate newGate in newFloor.attachedGates)
+        {
+            if (gatesSet.Contains(newGate) || oldGateHorizon.Contains(newGate)) { continue; }
+            oldGateHorizon.Add(newGate);
+        }
+    }
+
+    /// <summary>
+    /// Adds a new floor to the list of those discovered.
+    /// </summary>
+    /// <param name="previousSelection">The gate just opened by the virtual player.</param>
+    /// <param name="floorsDiscovered">The list of floors discovered.</param>
+    /// <returns></returns>
+    private Floor DiscoverNewFloor(Gate previousSelection, List<Floor> floorsDiscovered)
+    {
+        Floor newFloor = previousSelection.neighbors[0];
+        if (floorsDiscovered.Contains(previousSelection.neighbors[0])) { newFloor = previousSelection.neighbors[1]; }
+
+        floorsDiscovered.Add(newFloor);
+
+        return newFloor;
+    }
 }
 
 
