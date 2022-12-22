@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CollectableRequirementsDisplay : MonoBehaviour
 {
+
     //Built-in Unity Functions
     #region Unity Functions
 
@@ -16,7 +17,7 @@ public class CollectableRequirementsDisplay : MonoBehaviour
     #endregion
 
     //Initialization
-    #region
+    #region Initialization
 
     /// <summary>
     /// Initializes the CRD.
@@ -46,6 +47,12 @@ public class CollectableRequirementsDisplay : MonoBehaviour
         }
     }
 
+    public void DisplaySelf(Inventory requirements)
+    {
+        ShapeBackground(requirements);
+        SpawnForeground(requirements);
+    }
+
     /// <summary>
     /// Resizes the background to be in the correct orientation and capable of holding all requirements.
     /// </summary>
@@ -56,5 +63,11 @@ public class CollectableRequirementsDisplay : MonoBehaviour
         background.ShapeBorder(requirements);
     }
 
-    #endregion
+    public void SpawnForeground(Inventory requirements)
+    {
+        var foregroundAnchor = transform.GetChild(1).GetComponent<CollectableRequirmentsDisplayForeground>();
+        foregroundAnchor.SpawnForeground(requirements);
+    }
+
+    #endregion Initialization
 }

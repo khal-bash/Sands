@@ -127,7 +127,7 @@ public class Gate : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightShift))
         {
             UIDisplay = Instantiate(UIDisplayPrefab, transform);
-            UIDisplay.GetComponent<CollectableRequirementsDisplay>().ShapeBackground(requirements);
+            UIDisplay.GetComponent<CollectableRequirementsDisplay>().DisplaySelf(requirements);
         }
 
         if (Input.GetKeyUp(KeyCode.RightShift))

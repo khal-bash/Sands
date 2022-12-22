@@ -76,5 +76,24 @@ namespace DTO.Visuals
             }
         }
 
+        public static Theme theme(Inventory.CollectableType type)
+        {
+            switch (type)
+            {
+                case Inventory.CollectableType.diamond:
+                    return Theme.desert;
+                case Inventory.CollectableType.seashell:
+                    return Theme.ocean;
+                case Inventory.CollectableType.lavender:
+                    return Theme.grasslands;
+                case Inventory.CollectableType.ruby:
+                    return Theme.temple;
+                case Inventory.CollectableType.coal:
+                    return Theme.snow;
+                default:
+                    return Theme.unspecified;
+            }
+        }
+
     }
 }

@@ -46,6 +46,18 @@ public class Inventory
         }
     }
 
+    public List<CollectableType> typesRequired {
+        get
+        {
+            var output = new List<CollectableType>();
+            foreach (CollectableType type in collectableTypes)
+            {
+                if (Items[type] != 0) { output.Add(type); }
+            }
+            return output;
+        }
+    }
+
     #endregion
 
     // Class Construction
