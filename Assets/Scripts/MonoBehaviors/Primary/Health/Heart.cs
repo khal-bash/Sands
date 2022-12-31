@@ -23,7 +23,7 @@ public class Heart : MonoBehaviour
     /// <summary>
     /// The <see cref="SpriteRenderer"/> component on the Heart object.
     /// </summary>
-    private SpriteRenderer sr { get; set; }
+    private SpriteRenderer SR { get; set; }
 
     #endregion
 
@@ -47,7 +47,7 @@ public class Heart : MonoBehaviour
 
     private void InitializeCodeProperties()
     {
-        sr = gameObject.GetComponent<SpriteRenderer>();
+        SR = gameObject.GetComponent<SpriteRenderer>();
     }
 
     #endregion
@@ -64,8 +64,8 @@ public class Heart : MonoBehaviour
     {
         if (ID >= new_HP)
         {
-            Color new_color = Utilities.Visual.ChangeOpacity(sr.color, 0f);
-            sr.color = new_color;
+            Color new_color = Utilities.Visual.ChangeOpacity(SR.color, 0f);
+            SR.color = new_color;
         }
     }
 

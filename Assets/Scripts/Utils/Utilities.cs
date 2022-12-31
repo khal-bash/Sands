@@ -17,6 +17,16 @@ namespace Utilities
         public class Vector
         {
 
+            /// <summary>
+            /// Enum used to define sides of a half-space.
+            /// </summary>
+            public enum Side
+            {
+                positive,
+                negative,
+                none
+            }
+
             // Vector Functions
             #region Vector Functions
 
@@ -43,6 +53,34 @@ namespace Utilities
                 float dot_product = Vector3.Dot(vector1, vector2);
                 float theta = Mathf.Acos(dot_product / (vector1.magnitude * vector2.magnitude));
                 return theta;
+            }
+
+            /// <summary>
+            /// Finds a vector normal to another vector on the z=0 plane. 
+            /// </summary>
+            public static Vector3 GetNormalOn2DPlane(Vector2 vector)
+            {
+                return new Vector3(-vector.y, vector.x).normalized;
+            }
+
+            /// <summary>
+            /// Determines which side of a halfspace a point is on.
+            /// </summary>
+            /// <param name="origin">The relative origin of the system.</param>
+            /// <param name="criticalPoint">The point defining the halfspace, using the line formed through the origin.</param>
+            /// <param name="vector">The vector in question.</param>
+            /// <returns></returns>
+            public static Side GetSideOfHalfSpace(Vector3 origin, Vector3 criticalPoint, Vector3 vector)
+            {
+                Vector3 relativeCriticalPoint = criticalPoint - origin;
+                Vector3 relativeVector = vector - criticalPoint;
+                Vector3 normal = GetNormalOn2DPlane(relativeCriticalPoint);
+
+                float dot_product = Vector3.Dot(normal, relativeVector);
+                if (dot_product > 0) { return Side.positive; }
+                if (dot_product < 0) { return Side.negative; }
+                return Side.none;
+
             }
 
             /// <summary>
@@ -80,6 +118,10 @@ namespace Utilities
                 return new Vector2Int(Mathf.CeilToInt(vector.x), Mathf.CeilToInt(vector.y));
             }
 
+            public static Vector3 Cast(Vector2Int vector)
+            {
+                return new Vector3((float)vector.x, (float)vector.y);
+            }
             #endregion
         }
     }

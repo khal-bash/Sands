@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Gives an Impassable object an inventory-checking requirement behavior.
 /// </summary>
-public class Gate : MonoBehaviour
+public class Gate : LevelComponent
 {
 
     // Properties set in the Inspector
@@ -65,17 +65,9 @@ public class Gate : MonoBehaviour
     private GameObject UIDisplay;
 
     /// <summary>
-    /// The position of the gate in terms of the floor matrix. Note 
-    /// that the gate isn't actually contained in the floor matrix, since it
-    /// isn't a floor, but rather this value encodes the gate's position
-    /// relative to those floors using 0.5 to mean in between two floors.
-    /// </summary>
-    public Vector2 matrixWorldPosition;
-
-    /// <summary>
     /// The floors on either side of the gate.
     /// </summary>
-    public List<Floor> neighbors { get => GetAllNeighboringFloors(); }
+    public List<Floor> Neighbors { get => GetAllNeighboringFloors(); }
 
     /// <summary>
     /// Gets the two floors on either side of this gate.
@@ -83,9 +75,9 @@ public class Gate : MonoBehaviour
     /// <returns></returns>
     private List<Floor> GetAllNeighboringFloors()
     {
-        var floorMatrix = GameObject.Find("Generator").GetComponent<LevelSetupWizard>().floorMatrix;
-        return new List<Floor>() { floorMatrix[Utilities.Math.Vector.Ceil(matrixWorldPosition)],
-                                       floorMatrix[Utilities.Math.Vector.Floor(matrixWorldPosition)]};
+        var floorMatrix = GameObject.Find("Generator").GetComponent<LevelMetaData>().Registry.FloorMatrix;
+        return new List<Floor>() { floorMatrix[Utilities.Math.Vector.Ceil(MatrixWorldPosition)],
+                                       floorMatrix[Utilities.Math.Vector.Floor(MatrixWorldPosition)]};
 
     }
 
@@ -124,13 +116,13 @@ public class Gate : MonoBehaviour
     /// </summary>
     private void DisplayRequirements()
     {
-        if (Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             UIDisplay = Instantiate(UIDisplayPrefab, transform);
             UIDisplay.GetComponent<CollectableRequirementsDisplay>().DisplaySelf(requirements);
         }
 
-        if (Input.GetKeyUp(KeyCode.RightShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             try { Destroy(UIDisplay); }
             catch (NullReferenceException) { }

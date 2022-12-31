@@ -16,12 +16,19 @@ public class Collectable : MonoBehaviour
     /// </summary>
     public Inventory.CollectableType Type;
 
-    public Floor locale { get => gameObject.transform.parent.gameObject.GetComponent<Floor>(); }
+    /// <summary>
+    /// The floor that the collectable inhabits.
+    /// </summary>
+    public Floor Locale { get => gameObject.transform.parent.gameObject.GetComponent<Floor>(); }
 
+    /// <summary>
+    /// Sets the collectable's visual appearance.
+    /// </summary>
+    /// <param name="theme"></param>
     public void SetVisuals(Theme theme)
     {
-        gameObject.GetComponent<SpriteRenderer>().color = ThemeHandler.collectableColor(theme);
-        Type = ThemeHandler.collectableType(theme);
+        gameObject.GetComponent<SpriteRenderer>().color = ThemeHandler.Set(theme, "collectable");
+        Type = ThemeHandler.Set(theme);
     }
 
     #endregion

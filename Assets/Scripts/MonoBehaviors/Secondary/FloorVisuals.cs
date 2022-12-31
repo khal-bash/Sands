@@ -36,7 +36,7 @@ public class FloorVisuals
     /// <summary>
     /// The theme determining the visuals.
     /// </summary>
-    public Theme theme
+    public Theme Theme
     {
         get => _theme;
         set
@@ -55,7 +55,7 @@ public class FloorVisuals
     /// <summary>
     /// The background color of the floor.
     /// </summary>
-    public Color background_color { get; private set; }
+    public Color BackgroundColor { get; private set; }
 
 
     #endregion
@@ -65,7 +65,7 @@ public class FloorVisuals
 
     public FloorVisuals(Theme _theme = Theme.unspecified)
     {
-        theme = _theme;
+        Theme = _theme;
         InitializeDependentComponents();
     }
 
@@ -74,7 +74,7 @@ public class FloorVisuals
     /// </summary>
     private void InitializeDependentComponents()
     {
-        background_color = ThemeHandler.backgroundColor(theme);
+        BackgroundColor = ThemeHandler.Set(Theme, "background");
     }
 
     #endregion
@@ -83,7 +83,7 @@ public class FloorVisuals
     #region Convenience
 
     /// <summary>
-    /// All possible <see cref="Theme"/>s in list form, excluding the default <see cref="Theme.unspecified"/>.
+    /// All possible <see cref="DTO.Visuals.Theme"/>s in list form, excluding the default <see cref="Theme.unspecified"/>.
     /// </summary>
     public static List<Theme> AllSpecifiedThemes { 
         get 

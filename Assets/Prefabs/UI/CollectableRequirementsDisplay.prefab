@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10900d0f30360b84e923e9e43f39881d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lengthwiseEdgeBuffer: 0.1
+  heightwiseEdgeBuffer: 0.1
+  Spacing: 0.2
+  UICollectable: {fileID: 8034313839639899273, guid: a1fa0f840a3d6b64eb967641ef0dbfa2, type: 3}
 --- !u!1 &5102992483614238960
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,5 +189,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d9813420bc1494699d81e616b1e41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spacing: 0.2
-  UICollectable: {fileID: 8034313839639899273, guid: a1fa0f840a3d6b64eb967641ef0dbfa2, type: 3}

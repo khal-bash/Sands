@@ -23,8 +23,8 @@ namespace DTO.Setup
         /// <param name="y">The y value in range (-2, 2)</param>
         /// <returns>The floor at the indexed location, if one exists.</returns>
         public Floor this[int x, int y] {
-            get { return backgroundMatrix[x + 2, y + 2]; }
-            set { backgroundMatrix[x + 2 , y + 2] = value; }
+            get { return BackgroundMatrix[x + 2, y + 2]; }
+            set { BackgroundMatrix[x + 2 , y + 2] = value; }
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace DTO.Setup
         /// <summary>
         /// The background 5x5 matrix in raw form (indexed from [0,0] -> [4,4])
         /// </summary>
-        private Floor[,] backgroundMatrix { get; set; }
+        private Floor[,] BackgroundMatrix { get; set; }
 
         /// <summary>
         /// The origin of the matrix (i.e [0,0]).
         /// </summary>
-        public Floor origin { get { return this[0, 0]; } }
+        public Floor Origin { get { return this[0, 0]; } }
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace DTO.Setup
 
         public LevelInitializationMatrix()
         {
-            backgroundMatrix = new Floor[5, 5];
+            BackgroundMatrix = new Floor[5, 5];
         }
 
         #endregion

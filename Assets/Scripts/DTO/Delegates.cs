@@ -1,15 +1,23 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Container for various types of delegate.
+/// Container for various delagates.
 /// </summary>
 namespace DTO.Delegates
 {
 
     /// <summary>
-    /// Delegate used for notification events.
+    /// Delegate passing a <see cref="GameObject"/> and a <see cref="Color"/>
     /// </summary>
-    public delegate void Notify();
+    /// <param name="gameObject"></param>
+    /// <param name="color"></param>
+    public delegate void ChangeGameObjectColorAction(GameObject gameObject, Color color);
+
+    /// <summary>
+    /// Delegate passing a <see cref="GameObject"/>.
+    /// </summary>
+    /// <param name="gameObject">The <see cref="GameObject"/> being passed.</param>
+    public delegate void GameObjectInputAction(GameObject gameObject);
 
     /// <summary>
     /// Delagate passing an int.
@@ -18,8 +26,8 @@ namespace DTO.Delegates
     public delegate void IntInputAction(int value);
 
     /// <summary>
-    /// Delegate passing a <see cref="GameObject"/>.
+    /// Delegate used for notification events.
     /// </summary>
-    /// <param name="gameObject">The <see cref="GameObject"/> being passed.</param>
-    public delegate void GameObjectInputAction(GameObject gameObject);
+    public delegate void Notify();
+
 }

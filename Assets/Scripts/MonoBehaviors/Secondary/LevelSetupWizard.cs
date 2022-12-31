@@ -36,22 +36,7 @@ public class LevelSetupWizard : MonoBehaviour
     /// <summary>
     /// The <see cref="LevelMetaData"/> the wizard should use.
     /// </summary>
-    private LevelMetaData metaData { get; set; }
-
-    /// <summary>
-    /// Matrix codifying the locations of each floor.
-    /// </summary>
-    public LevelInitializationMatrix floorMatrix { get; set; } = new LevelInitializationMatrix();
-
-    /// <summary>
-    /// List tracking the floors in the Level.
-    /// </summary>
-    public List<Floor> floors { get; set; } = new List<Floor>();
-
-    /// <summary>
-    /// List tracking the walls and gates in the Level.
-    /// </summary>
-    public List<GameObject> wallsAndGates { get; set; } = new List<GameObject>();
+    private LevelMetaData MetaData { get; set; }
 
     #endregion
 
@@ -61,8 +46,8 @@ public class LevelSetupWizard : MonoBehaviour
     public void Awake()
     {
         InitializeCodeProperties();
-        PopulateLevelWithRandomFloors(metaData.numberOfFloors, metaData.random);
-        GenerateGateRequirements(metaData.random);
+        PopulateLevelWithRandomFloors(MetaData.numberOfFloors, MetaData.Random);
+        GenerateGateRequirements(MetaData.Random);
     }
 
     /// <summary>
@@ -70,7 +55,7 @@ public class LevelSetupWizard : MonoBehaviour
     /// </summary>
     private void InitializeCodeProperties()
     {
-        metaData = gameObject.GetComponent<LevelMetaData>();
+        MetaData = gameObject.GetComponent<LevelMetaData>();
     }
 
     /// <summary>
@@ -82,6 +67,8 @@ public class LevelSetupWizard : MonoBehaviour
     {
         GenerateRandomFloorMatrix(numberOfFloors, random);
         SetUpFloors();
+        StoredComponents.Player.Floors_Visited = new List<Floor>() { StoredComponents.LevelMetaData.Registry.FloorMatrix.Origin };
+        StoredComponents.Player.Current_Location = StoredComponents.LevelMetaData.Registry.FloorMatrix.Origin;
     }
 
     #endregion
@@ -110,7 +97,7 @@ public class LevelSetupWizard : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds a floor to the <see cref="floorMatrix"/>
+    /// Adds a floor to the <see cref="FloorMatrix"/>
     /// </summary>
     /// <param name="random">The random generator.</param>
     /// <param name="MinesweeperNeighborsVotesMatrix">A matrix containing the votes for each square</param>
@@ -135,9 +122,9 @@ public class LevelSetupWizard : MonoBehaviour
         {
             AddVoteToNeighbor(VotesMatrix, selectedLocation, direction);
         }
-        foreach (Floor existingFloor in floors)
+        foreach (Floor existingFloor in MetaData.Registry.Floors)
         {
-            VotesMatrix[existingFloor.matrixRawPosition.x, existingFloor.matrixRawPosition.y] = 0;
+            VotesMatrix[(int) existingFloor.MatrixRawPosition.x, (int) existingFloor.MatrixRawPosition.y] = 0;
         }
 
 
@@ -213,7 +200,7 @@ public class LevelSetupWizard : MonoBehaviour
 
                 try
                 {
-                    if (floorMatrix[selected + direction] != null || ballot.Count == 1)
+                    if (MetaData.Registry.FloorMatrix[selected + direction] != null || ballot.Count == 1)
                     {
                         selectionHasValidNeighbor = true;
                         break;
@@ -257,14 +244,14 @@ public class LevelSetupWizard : MonoBehaviour
 
         floorComponent.PopulateProperties(PickRandomTheme(selectedLocation, random), selectedLocation);
 
-        floors.Add(floorComponent);
-        floorMatrix[selectedLocation] = floorComponent;
+        MetaData.Registry.Floors.Add(floorComponent);
+        MetaData.Registry.FloorMatrix[selectedLocation] = floorComponent;
     }
 
     /// <summary>
     /// Picks a random theme that is not the same as one of its neighbors
     /// </summary>
-    /// <param name="floorMatrixPosition">The location of the floor in the <see cref="floorMatrix"/></param>
+    /// <param name="floorMatrixPosition">The location of the floor in the <see cref="FloorMatrix"/></param>
     /// <param name="random">The random generator.</param>
     /// <returns>The chosen theme.</returns>
     private Theme PickRandomTheme(Vector2Int floorMatrixPosition, Random random)
@@ -277,7 +264,7 @@ public class LevelSetupWizard : MonoBehaviour
             Vector2Int test_position = floorMatrixPosition + direction;
             try
             {
-                possibleThemes.Remove(floorMatrix[test_position].visuals.theme);
+                possibleThemes.Remove(MetaData.Registry.FloorMatrix[test_position].visuals.Theme);
             }
             catch (IndexOutOfRangeException) { }
             catch (NullReferenceException) { }
@@ -292,49 +279,41 @@ public class LevelSetupWizard : MonoBehaviour
     /// </summary>
     private void SetUpFloors()
     {
-        foreach (Floor floor in floors)
+        foreach (Floor floor in MetaData.Registry.Floors)
         {
 
             foreach (Vector2Int direction in StoredConstants.UDLR)
             {
-                floor.neighbors.neighbors[direction] = floorMatrix.CheckForNeighbor(floor.matrixWorldPosition, direction);
+                floor.Neighbors.NeighborsReference[direction] = MetaData.Registry.FloorMatrix.CheckForNeighbor(Utilities.Math.Vector.Floor(floor.MatrixWorldPosition), direction);
             }
 
-            floor.gameObject.transform.position = (Vector2)floor.matrixWorldPosition * Floor.size;
-            wallsAndGates.AddRange(floor.AddWallsAndGates());
+            floor.gameObject.transform.position = (Vector2) floor.MatrixWorldPosition * Floor.size;
+            floor.AddWallsAndGates();
         }
 
-        RemoveDuplicateWallsAndGates();
+        //RemoveDuplicateWallsAndGates();
     }
 
     /// <summary>
-    /// Removes all duplicate walls and gates.
+    /// Adds a new floor to the list of those discovered.
     /// </summary>
-    private void RemoveDuplicateWallsAndGates()
+    /// <param name="previousSelection">The gate just opened by the virtual player.</param>
+    /// <param name="floorsDiscovered">The list of floors discovered.</param>
+    /// <returns></returns>
+    private Floor DiscoverNewFloor(Gate previousSelection, List<Floor> floorsDiscovered)
     {
+        Floor newFloor = previousSelection.Neighbors[0];
+        if (floorsDiscovered.Contains(previousSelection.Neighbors[0])) { newFloor = previousSelection.Neighbors[1]; }
 
-        var observedPositions = new List<Vector3>();
-        var updatedWallsAndGates = new List<GameObject>();
+        floorsDiscovered.Add(newFloor);
 
-        foreach (GameObject wallOrGate in wallsAndGates)
-        {
-            Vector3 objectPosition = wallOrGate.transform.position;
-
-            if(observedPositions.Contains(objectPosition))
-            {
-                Destroy(wallOrGate);
-                continue;
-            }
-
-            updatedWallsAndGates.Add(wallOrGate);
-            observedPositions.Add(objectPosition);
-        }
-
-        wallsAndGates = updatedWallsAndGates;
+        return newFloor;
     }
 
     #endregion
 
+    //Instantiating Gate Requirements
+    #region Gate Requirements
 
     /// <summary>
     /// Generates random requirements for all gates in the level.
@@ -343,12 +322,12 @@ public class LevelSetupWizard : MonoBehaviour
     private void GenerateGateRequirements(Random random)
     {
 
-        var floorsDiscovered = new List<Floor>() { floorMatrix.origin };
+        var floorsDiscovered = new List<Floor>() { MetaData.Registry.FloorMatrix.Origin };
         var gatesAssignedTo = new List<Gate>();
 
         var collectableTypesDiscovered = new List<Inventory.CollectableType>() 
         {
-            ThemeHandler.collectableType(floorMatrix.origin.theme)
+            ThemeHandler.Set(MetaData.Registry.FloorMatrix.Origin.Theme)
         };
 
         var gateHorizon = EnumerateFirstGateHorizon();
@@ -399,7 +378,7 @@ public class LevelSetupWizard : MonoBehaviour
     /// </summary>
     private List<Gate> EnumerateFirstGateHorizon()
     {
-        return floorMatrix[Vector2Int.zero].attachedGates;
+        return MetaData.Registry.FloorMatrix[Vector2Int.zero].AttachedGates;
     }
 
     /// <summary>
@@ -420,7 +399,7 @@ public class LevelSetupWizard : MonoBehaviour
         oldGateHorizon.Remove(previousSelection);
         Floor newFloor = DiscoverNewFloor(previousSelection, floorsDiscovered);
 
-        var floorCollectableType = ThemeHandler.collectableType(newFloor.theme);
+        var floorCollectableType = ThemeHandler.Set(newFloor.Theme);
         if (!typesAvailable.Contains(floorCollectableType)) { typesAvailable.Add(floorCollectableType); }
 
         CreateGateHorizonWithoutDuplicates(oldGateHorizon, gatesSet, newFloor);
@@ -434,28 +413,14 @@ public class LevelSetupWizard : MonoBehaviour
     /// <param name="newFloor">The new floor that the player just discovered.</param>
     private void CreateGateHorizonWithoutDuplicates(List<Gate> oldGateHorizon, List<Gate> gatesSet, Floor newFloor)
     {
-        foreach (Gate newGate in newFloor.attachedGates)
+        foreach (Gate newGate in newFloor.AttachedGates)
         {
             if (gatesSet.Contains(newGate) || oldGateHorizon.Contains(newGate)) { continue; }
             oldGateHorizon.Add(newGate);
         }
     }
 
-    /// <summary>
-    /// Adds a new floor to the list of those discovered.
-    /// </summary>
-    /// <param name="previousSelection">The gate just opened by the virtual player.</param>
-    /// <param name="floorsDiscovered">The list of floors discovered.</param>
-    /// <returns></returns>
-    private Floor DiscoverNewFloor(Gate previousSelection, List<Floor> floorsDiscovered)
-    {
-        Floor newFloor = previousSelection.neighbors[0];
-        if (floorsDiscovered.Contains(previousSelection.neighbors[0])) { newFloor = previousSelection.neighbors[1]; }
-
-        floorsDiscovered.Add(newFloor);
-
-        return newFloor;
-    }
+    #endregion
 }
 
 

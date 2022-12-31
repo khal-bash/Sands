@@ -6,6 +6,30 @@ using UnityEngine;
 public class CollectableRequirementsDisplay : MonoBehaviour
 {
 
+    #region Code Properties
+
+    /// <summary>
+    /// The buffer to place on the lengthwise edges of the display. 
+    /// </summary>
+    public float lengthwiseEdgeBuffer;
+
+    /// <summary>
+    /// The buffer to place on the heightwise edges of the display. 
+    /// </summary>
+    public float heightwiseEdgeBuffer;
+
+    /// <summary>
+    /// The spacing in between collectable icons in the foreground.
+    /// </summary>
+    public float Spacing = 0.2f;
+
+    /// <summary>
+    /// The <see cref="GameObject"/> to spawn in the foreground of the display.
+    /// </summary>
+    public GameObject UICollectable;
+
+    #endregion 
+
     //Built-in Unity Functions
     #region Unity Functions
 
@@ -47,6 +71,10 @@ public class CollectableRequirementsDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Displays the ... well, display.
+    /// </summary>
+    /// <param name="requirements">The requirements of the gate.</param>
     public void DisplaySelf(Inventory requirements)
     {
         ShapeBackground(requirements);
@@ -59,13 +87,17 @@ public class CollectableRequirementsDisplay : MonoBehaviour
     /// <param name="requirements">The requirements of the gate.</param>
     public void ShapeBackground(Inventory requirements)
     {
-        var background = transform.GetChild(0).GetComponent<DisplayBorder>();
+        var background = transform.GetChild(0).GetComponent<CollectableRequirementsDisplayBackground>();
         background.ShapeBorder(requirements);
     }
 
+    /// <summary>
+    /// Spawns the foreground of the display.
+    /// </summary>
+    /// <param name="requirements">The requirements of the gate.</param>
     public void SpawnForeground(Inventory requirements)
     {
-        var foregroundAnchor = transform.GetChild(1).GetComponent<CollectableRequirmentsDisplayForeground>();
+        var foregroundAnchor = transform.GetChild(1).GetComponent<CollectableRequirementsDisplayForeground>();
         foregroundAnchor.SpawnForeground(requirements);
     }
 

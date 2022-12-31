@@ -10,9 +10,6 @@ using UnityEngine;
 public class Inventory
 {
 
-    // Important Properties
-    #region Properties
-
     /// <summary>
     /// Contains all allowable values of the <see cref="Collectable.Type"/> attribute.
     /// </summary>
@@ -26,37 +23,41 @@ public class Inventory
         unspecified
     }
 
+    // Important Properties
+    #region Properties
+
+    /// <summary>
+    /// An <see cref="IEnumerable"/> of all the types in <see cref="CollectableType"/>, including the default
+    /// <see cref="CollectableType.unspecified"/>.
+    /// </summary>
+    private readonly IEnumerable<CollectableType> AllCollectableTypes = (IEnumerable<CollectableType>)System.Enum.GetValues(typeof(CollectableType));
+
+    /// <summary>
+    /// Gets the number of different required <see cref="CollectableType"/> in this inventory.
+    /// </summary>
+    public int Dimension { get => TypesRequired.Count; }
+
     /// <summary>
     /// The amount of each item in the player's inventory.
     /// </summary>
     public SortedDictionary<CollectableType, int> Items { get; private set; }
 
-    private IEnumerable<CollectableType> collectableTypes = (IEnumerable<CollectableType>) System.Enum.GetValues(typeof(CollectableType));
-
-    public int dimension
-    {
-        get 
-        {
-            int _dimension = 0;
-            foreach(CollectableType type in collectableTypes)
-            {
-                if(Items[type] > 0) { _dimension++; }
-            }
-            return _dimension;
-        }
-    }
-
-    public List<CollectableType> typesRequired {
+    /// <summary>
+    /// A list of all <see cref="CollectableType"/> required in this inventory.
+    /// </summary>
+    public List<CollectableType> TypesRequired {
         get
         {
             var output = new List<CollectableType>();
-            foreach (CollectableType type in collectableTypes)
+            foreach (CollectableType type in AllCollectableTypes)
             {
+                if (type == CollectableType.unspecified) { continue; }
                 if (Items[type] != 0) { output.Add(type); }
             }
             return output;
         }
     }
+
 
     #endregion
 
@@ -68,14 +69,14 @@ public class Inventory
         PopulateItemsDict();
     }
 
-    public Inventory(int type0 = 0, int type1 = 0, int type2 = 0, int type3 = 0, int type4 = 0)
+    public Inventory(int diamond = 0, int seashell = 0, int lavender = 0, int ruby = 0, int coal = 0)
     {
         PopulateItemsDict();
-        Items[CollectableType.diamond] = type0;
-        Items[CollectableType.seashell] = type1;
-        Items[CollectableType.lavender] = type2;
-        Items[CollectableType.ruby] = type3;
-        Items[CollectableType.coal] = type4;
+        Items[CollectableType.diamond] = diamond;
+        Items[CollectableType.seashell] = seashell;
+        Items[CollectableType.lavender] = lavender;
+        Items[CollectableType.ruby] = ruby;
+        Items[CollectableType.coal] = coal;
     }
 
     /// <summary>
@@ -84,7 +85,7 @@ public class Inventory
     void PopulateItemsDict() 
     {
         Items = new SortedDictionary<CollectableType, int>();
-        foreach (CollectableType type in collectableTypes)
+        foreach (CollectableType type in AllCollectableTypes)
         {
             Items.Add(type, 0);
         }

@@ -18,7 +18,7 @@ namespace DTO.Setup
         /// <summary>
         /// Dictionary mapping a direction to whether or not the is a neighbor present there. 
         /// </summary>
-        public Dictionary<Vector2, bool> neighbors { get; set; }
+        public Dictionary<Vector2, bool> NeighborsReference { get; set; }
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace DTO.Setup
 
         public Neighbors()
         {
-            neighbors = new Dictionary<Vector2, bool>() {
+            NeighborsReference = new Dictionary<Vector2, bool>() {
                 {Vector2.up, false},
                 {Vector2.left, false},
                 {Vector2.down, false},

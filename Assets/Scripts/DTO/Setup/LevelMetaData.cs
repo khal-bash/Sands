@@ -6,6 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class governing the generation of the level in the <see cref="LevelSetupWizard"/>
+/// </summary>
 public class LevelMetaData : MonoBehaviour
 {
 
@@ -30,11 +33,12 @@ public class LevelMetaData : MonoBehaviour
     /// <summary>
     /// The random generator to use.
     /// </summary>
-    public System.Random random { get; private set;}
+    public System.Random Random { get; private set;}
 
-    public LevelInitializationMatrix floorMatrix { get => gameObject.GetComponent<LevelSetupWizard>().floorMatrix; }
-
-    public List<Floor> floors { get => gameObject.GetComponent<LevelSetupWizard>().floors;  }
+    /// <summary>
+    /// The <see cref="LevelRegistry"/> holding the components in the level.
+    /// </summary>
+    public LevelRegistry Registry { get; set; }
 
     #endregion
 
@@ -51,8 +55,9 @@ public class LevelMetaData : MonoBehaviour
     /// </summary>
     private void InitializeCodeProperties()
     {
-        if (seed == -1) { random = new System.Random(); }
-        else { random = new System.Random(seed); }
+        if (seed == -1) { Random = new System.Random(); }
+        else { Random = new System.Random(seed); }
+        Registry = new LevelRegistry();
     }
 
     #endregion

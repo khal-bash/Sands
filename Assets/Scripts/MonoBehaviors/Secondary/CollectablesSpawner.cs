@@ -32,7 +32,7 @@ public class CollectablesSpawner : MonoBehaviour
     /// <summary>
     /// The random number generator specified in the <see cref="LevelMetaData"/>.
     /// </summary>
-    private Random random { get => StoredComponents.LevelMetaData.random; }
+    private Random Random { get => StoredComponents.LevelMetaData.Random; }
 
     #endregion
 
@@ -44,7 +44,7 @@ public class CollectablesSpawner : MonoBehaviour
 
         Beam.ItemCollected += OnItemCollected;
 
-        foreach (Floor floor in StoredComponents.LevelMetaData.floors)
+        foreach (Floor floor in StoredComponents.LevelMetaData.Registry.Floors)
         {
             RandomlyPlaceCollectableOnFloor(floor);
         }
@@ -61,8 +61,8 @@ public class CollectablesSpawner : MonoBehaviour
     /// <param name="floor">The floor in which to place the item.</param>
     private void RandomlyPlaceCollectableOnFloor(Floor floor)
     {
-        float x = -0.45f + (0.9f * (float)random.NextDouble());
-        float y = -0.45f + (0.9f * (float)random.NextDouble());
+        float x = -0.45f + (0.9f * (float)Random.NextDouble());
+        float y = -0.45f + (0.9f * (float)Random.NextDouble());
 
         float scaleCorrection = (float)(decimal.Divide(1, Floor.size));
 
@@ -70,14 +70,14 @@ public class CollectablesSpawner : MonoBehaviour
 
         Vector3 position = new Vector3(x, y);
 
-        if ((floor.matrixWorldPosition == Vector2Int.zero) & (position.magnitude < 0.05f))
+        if ((floor.MatrixWorldPosition == Vector2Int.zero) & (position.magnitude < 0.05f))
         {
             position = position.normalized * 0.1f;
         }
 
         instantiatedCollectable.transform.localPosition = position;
         instantiatedCollectable.transform.localScale = new Vector3(scaleCorrection, scaleCorrection, 1);
-        instantiatedCollectable.GetComponent<Collectable>().SetVisuals(floor.theme);
+        instantiatedCollectable.GetComponent<Collectable>().SetVisuals(floor.Theme);
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class CollectablesSpawner : MonoBehaviour
 
     private void OnItemCollected(GameObject item)
     {
-        StartCoroutine(RandomlyPlaceCollectableOnFloorDuringPlay(item.GetComponent<Collectable>().locale));
+        StartCoroutine(RandomlyPlaceCollectableOnFloorDuringPlay(item.GetComponent<Collectable>().Locale));
     }
 
     #endregion

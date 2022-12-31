@@ -1,5 +1,6 @@
 using DTO.Delegates;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -81,6 +82,16 @@ public class Player : MonoBehaviour
     /// </summary>
     public Health HP { get; set; }
 
+    /// <summary>
+    /// A list of the floors the player has visited.
+    /// </summary>
+    public List<Floor> Floors_Visited { get; set; }
+
+    /// <summary>
+    /// The current location of the player.
+    /// </summary>
+    public Floor Current_Location { get; set; }
+
     #endregion
 
     // Built-in Unity Functions
@@ -108,12 +119,6 @@ public class Player : MonoBehaviour
         {
             StartDash();
         }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ShowInventory();
-        }
-
     }
 
     private void FixedUpdate()
@@ -148,6 +153,22 @@ public class Player : MonoBehaviour
     protected virtual void OnDamage(GameObject enemy)
     {
         Damage?.Invoke(enemy);
+    }
+
+    /// <summary>
+    /// Updates <see cref="Floors_Visited"/> and <see cref="Current_Location"/> when a boundary sensor is crossed.
+    /// NOTE: This is not actually an event subscriber, it just functions a lot like one.
+    /// </summary>
+    /// <param name="sensor">The sensor that was crossed.</param>
+    public void OnSensorCrossed(BoundarySensor sensor)
+    {
+        Floor newLocation = sensor.Neighbors[0];
+        if (newLocation == Current_Location) { newLocation = sensor.Neighbors[1]; }
+
+        if (!Floors_Visited.Contains(newLocation)) { Floors_Visited.Add(newLocation); }
+        Current_Location = newLocation;
+
+        GameObject.Find("MiniMap").GetComponent<MiniMap>().RefreshMiniMap();
     }
 
     #endregion

@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff11cf20041c29d40a7f465f0fa7fd7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 20
   wall: {fileID: 391884857599476192, guid: b89193e2db0e3f64c97d140aa4dbb5fe, type: 3}
   gate: {fileID: 391884857599476192, guid: bcc1219fcdc6a3e478f4b983b3091fd8, type: 3}
+  movementSensor: {fileID: 7805229734570937954, guid: 554ddc2b04cab1941b07e16ab8df0981, type: 3}
 --- !u!61 &4346401799516700616
 BoxCollider2D:
   m_ObjectHideFlags: 0
