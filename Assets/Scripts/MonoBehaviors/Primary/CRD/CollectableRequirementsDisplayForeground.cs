@@ -30,7 +30,7 @@ public class CollectableRequirementsDisplayForeground : MonoBehaviour
             GameObject collectableIcon = (GameObject) Instantiate(CRD.UICollectable, parent: transform, instantiateInWorldSpace: false);
             collectableIcon.transform.localPosition = new Vector3(runningEndpoint + 0.5f, 0);                           
 
-            collectableIcon.GetComponent<SpriteRenderer>().color = ThemeHandler.Set(type);
+            collectableIcon.GetComponent<SpriteRenderer>().color = ThemeHandler.Accord(type);
 
             runningEndpoint += (1f + CRD.Spacing);
         }

@@ -143,6 +143,5 @@ namespace Utilities
         {
             return new Color(old_color.r, old_color.g, old_color.b, a: opacity);
         }
-
     }
 }

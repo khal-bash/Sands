@@ -27,8 +27,8 @@ public class Collectable : MonoBehaviour
     /// <param name="theme"></param>
     public void SetVisuals(Theme theme)
     {
-        gameObject.GetComponent<SpriteRenderer>().color = ThemeHandler.Set(theme, "collectable");
-        Type = ThemeHandler.Set(theme);
+        gameObject.GetComponent<SpriteRenderer>().color = ThemeHandler.Accord(theme, "collectable");
+        Type = ThemeHandler.Accord(theme);
     }
 
     #endregion

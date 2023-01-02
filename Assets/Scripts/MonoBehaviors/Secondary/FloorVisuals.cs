@@ -74,7 +74,7 @@ public class FloorVisuals
     /// </summary>
     private void InitializeDependentComponents()
     {
-        BackgroundColor = ThemeHandler.Set(Theme, "background");
+        BackgroundColor = ThemeHandler.Accord(Theme, "background");
     }
 
     #endregion

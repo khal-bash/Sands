@@ -82,7 +82,7 @@ public class Beam : MonoBehaviour
 
     #endregion
 
-    public static  event GameObjectInputAction ItemCollected;
+    public static event GameObjectInputAction ItemCollected;
 
     // Event Subscribers
     #region Events

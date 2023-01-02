@@ -26,6 +26,12 @@ namespace DTO.Delegates
     public delegate void IntInputAction(int value);
 
     /// <summary>
+    /// Delegate used to pass inventories.
+    /// </summary>
+    /// <param name="inventory">The <see cref="Inventory"/> being passed</param>
+    public delegate void InventoryManagementAction(Inventory inventory);
+
+    /// <summary>
     /// Delegate used for notification events.
     /// </summary>
     public delegate void Notify();

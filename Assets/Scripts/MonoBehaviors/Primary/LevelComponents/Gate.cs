@@ -1,5 +1,6 @@
 using UnityEngine;
 using DTO.Storage;
+using DTO.Delegates;
 using System;
 using System.Collections.Generic;
 
@@ -42,6 +43,9 @@ public class Gate : LevelComponent
     /// </summary>
     public int coal;
 
+    /// <summary>
+    /// The object to display the gate requirements.
+    /// </summary>
     public GameObject UIDisplayPrefab;
 
     #endregion
@@ -83,6 +87,21 @@ public class Gate : LevelComponent
 
     #endregion
 
+    //Events and Handlers
+    #region Events
+
+    /// <summary>
+    /// Event that triggers when the gate is opened.
+    /// </summary>
+    public static event InventoryManagementAction GateOpened;
+
+    virtual protected void OnGateOpened()
+    {
+        GateOpened?.Invoke(requirements);
+    }
+
+    #endregion
+
     // Built-in Unity Functions
     #region Unity Functions
 
@@ -101,6 +120,7 @@ public class Gate : LevelComponent
     {
         if (Satisfied)
         {
+            OnGateOpened();
             Destroy(gameObject);
             StoredClasses.Player_Inventory -= requirements;
         }

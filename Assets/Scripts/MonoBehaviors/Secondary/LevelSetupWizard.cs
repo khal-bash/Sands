@@ -327,7 +327,7 @@ public class LevelSetupWizard : MonoBehaviour
 
         var collectableTypesDiscovered = new List<Inventory.CollectableType>() 
         {
-            ThemeHandler.Set(MetaData.Registry.FloorMatrix.Origin.Theme)
+            ThemeHandler.Accord(MetaData.Registry.FloorMatrix.Origin.Theme)
         };
 
         var gateHorizon = EnumerateFirstGateHorizon();
@@ -399,7 +399,7 @@ public class LevelSetupWizard : MonoBehaviour
         oldGateHorizon.Remove(previousSelection);
         Floor newFloor = DiscoverNewFloor(previousSelection, floorsDiscovered);
 
-        var floorCollectableType = ThemeHandler.Set(newFloor.Theme);
+        var floorCollectableType = ThemeHandler.Accord(newFloor.Theme);
         if (!typesAvailable.Contains(floorCollectableType)) { typesAvailable.Add(floorCollectableType); }
 
         CreateGateHorizonWithoutDuplicates(oldGateHorizon, gatesSet, newFloor);

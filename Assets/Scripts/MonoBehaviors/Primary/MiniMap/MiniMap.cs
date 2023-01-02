@@ -139,7 +139,7 @@ public class MiniMap : MonoBehaviour
     /// <param name="y">The y-coordinate of the floor</param>
     private void Reveal(Floor analogousFloor, int x, int y)
     {
-        SetFloorColor(ThemeHandler.Set(analogousFloor.Theme, "minimap"), x, y);
+        SetFloorColor(ThemeHandler.Accord(analogousFloor.Theme, "minimap"), x, y);
     }
 
     #endregion

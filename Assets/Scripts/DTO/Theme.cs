@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using static Inventory;
 
 namespace DTO.Visuals
 {
@@ -34,7 +36,7 @@ namespace DTO.Visuals
         /// <item><term>"minimap"</term> <description>Set the color of a floor in the minimap.</description></item>
         /// </list>
         /// </param>
-        public static Color Set(Theme theme, string targetType = "")
+        public static Color Accord(Theme theme, string targetType = "")
         {
             switch (targetType)
             {
@@ -54,7 +56,7 @@ namespace DTO.Visuals
         /// Gets the required <see cref="Inventory.CollectableType"/> in accodrance with the theme.
         /// </summary>
         /// <param name="theme">The theme being used.</param>
-        public static Inventory.CollectableType Set(Theme theme)
+        public static CollectableType Accord(Theme theme)
         {
             return CollectableType(theme);
         }
@@ -69,10 +71,12 @@ namespace DTO.Visuals
         /// <item><term>"collectable"</term> <description>Set the color of a collectable.</description></item>
         /// </list></param>
         /// <returns></returns>
-        public static Color Set(Inventory.CollectableType type, string targetType = "collectable")
+        public static Color Accord(CollectableType type, string targetType = "collectable")
         {
             switch (targetType)
             {
+                case "accent":
+                    return CollectableAccentColor(type);
                 case "collectable":
                     return CollectableColor(GetTheme(type));
                 default:
@@ -110,7 +114,7 @@ namespace DTO.Visuals
             };
         }
 
-        private static Inventory.CollectableType CollectableType(Theme theme)
+        private static CollectableType CollectableType(Theme theme)
         {
             return theme switch
             {
@@ -141,7 +145,7 @@ namespace DTO.Visuals
         //Same thing here.
         #region Getting Theme
 
-        private static Theme GetTheme(Inventory.CollectableType type)
+        private static Theme GetTheme(CollectableType type)
         {
             return type switch
             {
@@ -152,6 +156,21 @@ namespace DTO.Visuals
                 Inventory.CollectableType.coal => Theme.snow,
                 _ => Theme.unspecified,
             };
+        }
+
+        #endregion
+
+        //Conversions that cannot be handled through theme as an indermediary.
+        #region Special Cases
+
+        private static Color CollectableAccentColor(CollectableType type)
+        {
+            var darks = new List<CollectableType>() { Inventory.CollectableType.ruby,
+                                                      Inventory.CollectableType.coal,
+                                                      Inventory.CollectableType.lavender};
+
+            if (darks.Contains(type)) { return Color.white; }
+            return Color.black;
         }
 
         #endregion
