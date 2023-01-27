@@ -132,7 +132,7 @@ public class Floor : LevelComponent
     {
         MainColor = visuals.BackgroundColor;
         var sr = gameObject.GetComponent<SpriteRenderer>();
-        sr.color = MainColor;
+        
     }
 
     #endregion
